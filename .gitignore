@@ -1,55 +1,60 @@
-# Prerequisites
-*.d
+# Sentaurus Workbench generated files
+*_des/
+*_build/
+*_results/
+*_output/
+*_data/
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
-
-# Linker output
-*.ilk
-*.map
-*.exp
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
+# Sentaurus generated files
+*.tdr
+*.tdr.bnd
+*.plt
+*.log
 *.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+*.err
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+# Sentaurus intermediate files
+*.cmd.bak
+*.par.bak
+*.des.bak
+*.dat
+*.tmp
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+# SWB generated files
+*.wsg
+*.bak
+*.lock
 
-# debug information files
-*.dwo
+# Simulation output directories
+results/
+output/
+build/
+runs/
+logs/
+
+# Large simulation data
+*.csv
+*.raw
+
+# IDE / editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python cache (if used for plotting/analysis)
+__pycache__/
+*.pyc
+
+# MATLAB generated files
+*.asv
+
+# Temporary files
+*.tmp
+*.temp
+~*
