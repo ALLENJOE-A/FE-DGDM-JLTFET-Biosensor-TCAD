@@ -25,15 +25,13 @@
 *.bak
 *.lock
 
-# Simulation output directories
-results/
-output/
-build/
+# Simulation RUN directories (not our organized results/)
 runs/
 logs/
+build/
+output/
 
-# Large simulation data
-*.csv
+# Large simulation raw data (keep organized CSV exports in results/raw_data/)
 *.raw
 
 # IDE / editor files
@@ -58,3 +56,13 @@ __pycache__/
 *.tmp
 *.temp
 ~*
+
+# Keep our organized directories:
+# results/          <- KEEP (organized plots)
+# figures/          <- KEEP (publication figures)
+# simulations/      <- KEEP (input decks when added)
+# sde/              <- KEEP (structure files when added)
+# sdevice/          <- KEEP (simulation files when added)
+# parameter/        <- KEEP (parameter files when added)
+# analysis/         <- KEEP (scripts when added)
+# documents/        <- KEEP (docs when added)
