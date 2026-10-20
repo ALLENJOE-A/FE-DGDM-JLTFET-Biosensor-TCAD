@@ -1,90 +1,111 @@
 # Simulation Methodology and Numerical Formulation
 **Project:** Ferroelectric Double-Gate Doping-Modulated Junctionless Tunnel FET (FE-DGDM-JLTFET) Biosensor TCAD  
-**Repository:** [ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD](https://github.com/ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD)
+**Repository:** [ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD](https://github.com/ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD)  
+**Authors:** Allen Joe A (24BVD1100), Guided by: Lakshmi B  
+**Reference:** IEEE Sensors Journal, Vol. 24, No. 22, pp. 37923-37930 (Nov 2024)
 
 ---
 
 ## 1. Sentaurus TCAD Toolchain Architecture
 
-The device simulation framework uses the industry-standard Synopsys Sentaurus TCAD suite:
+The device simulation framework uses the Synopsys Sentaurus TCAD suite:
 
 ```
-┌──────────────────────────────────────────────┐
-│  Sentaurus Structure Editor (SDE)            │
-│  - 2D Cross-section geometry definition      │
-│  - T-channel & Inverted-T nanocavity layout │
-│  - Electrode contacts & doping profiles      │
-└──────────────────────┬───────────────────────┘
-                       │
-                       ▼
-┌──────────────────────────────────────────────┐
-│  Sentaurus Mesh (SNMesh)                     │
-│  - Delaunay triangulation                    │
-│  - Sub-nanometer refinement at tunnel junction│
-│  - Nanocavity interface boundary mesh        │
-└──────────────────────┬───────────────────────┘
-                       │
-                       ▼
-┌──────────────────────────────────────────────┐
-│  Sentaurus Device (SDevice)                  │
-│  - Coupled Poisson & Drift-Diffusion solvers │
-│  - Kane Non-Local Band-to-Band Tunneling     │
-│  - Landau-Khalatnikov Ferroelectric models   │
-│  - DC voltage ramp & parameter sweeps        │
-└──────────────────────┬───────────────────────┘
-                       │
-                       ▼
-┌──────────────────────────────────────────────┐
-│  Sentaurus Inspect / SVisual                 │
-│  - Extraction of I-V transfer curves         │
-│  - 1D profiles (Potential, E-field, Bands)   │
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────┐
+│  Sentaurus Structure Editor (SDE)                      │
+│  - Script: sde/structure/sde_dvs.tcl                   │
+│  - 2D Cross-section geometry (158 nm total length)     │
+│  - T-channel body & Inverted-T nanocavity layout       │
+│  - Electrode contacts (s, d, g) & doping definitions   │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+                           ▼
+┌────────────────────────────────────────────────────────┐
+│  Sentaurus Mesh (SNMesh: snmesh -a)                    │
+│  - Global window: RefEvalWin.all (2.0 nm x 0.2 nm)     │
+│  - Multibox refinement: RefEvalWin.active               │
+│    (1.0 nm x 0.1 nm sub-nanometer grid at BTBT zone)   │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+                           ▼
+┌────────────────────────────────────────────────────────┐
+│  Sentaurus Device (SDevice)                            │
+│  - Command Deck: sdevice/device/sdevice_des.tcl        │
+│  - Parameter File: parameter/sdevice.par               │
+│  - Physics Models: sdevice/physics/physics_models.tcl  │
+│  - Coupled Poisson & Hydrodynamic transport equations  │
+│  - Dynamic Non-Local Hurkx Band-to-Band Tunneling      │
+│  - Landau-Devonshire Ferroelectric Polarization        │
+│  - Quasistationary Vds ramp & Vgs fine sweep           │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+                           ▼
+┌────────────────────────────────────────────────────────┐
+│  Sentaurus Inspect & SVisual / Python Analysis         │
+│  - SWB Automation: simulations/fe_dgdm_jltfet_...tcl   │
+│  - Data extraction: analysis/scripts/extract_metrics.py│
+│  - Figures: analysis/scripts/plot_publication_figures  │
+└────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 2. Mathematical Formulations & Governing Equations
+## 2. Governing Equations and Physical Formulations
 
-### A. Electrostatic Poisson & Drift-Diffusion System
-Carrier transport inside the silicon channel is governed by the self-consistent solution of Poisson's equation and electron/hole continuity equations:
+### A. Electrostatic Poisson & Hydrodynamic Transport
+Carrier transport in the channel body is governed by the self-consistent solution of Poisson's equation and the Hydrodynamic conservation equations (accounting for non-local carrier heating and high-field saturation):
 
-$$\nabla \cdot (\epsilon \nabla \psi) = -q (p - n + N_D^+ - N_A^-) - \rho_{trap}$$
+$$\nabla \cdot (\epsilon \nabla \psi) = -q (p - n + N_D^+ - N_A^-) - \nabla \cdot \mathbf{P}_{FE}$$
 
 $$\nabla \cdot \mathbf{J}_n = q R_{net} - q G_{BTBT}$$
 $$\nabla \cdot \mathbf{J}_p = -q R_{net} + q G_{BTBT}$$
 
+$$\nabla \cdot \mathbf{S}_n = \mathbf{J}_n \cdot \mathbf{E} - n \left( \frac{\frac{3}{2} k_B (T_n - T_L)}{\tau_{w,ele}} \right)$$
+
 where:
-- $\mathbf{J}_n = -q \mu_n n \nabla \phi_n$ and $\mathbf{J}_p = -q \mu_p p \nabla \phi_p$ are electron and hole current densities.
+- $\mathbf{P}_{FE}$ is the ferroelectric polarization vector in the $\text{Si:HfO}_2$ regions.
+- $\tau_{w,ele} = 0.3\text{ ps}$ is the electron energy relaxation time.
 - $G_{BTBT}$ is the band-to-band tunneling generation rate.
-- $R_{net}$ is the net recombination rate (SRH + Auger).
 
-### B. Band-to-Band Tunneling Generation Rate
-The non-local Kane tunneling generation rate along carrier trajectories is computed as:
-$$G_{BTBT} = A_{Kane} \cdot \frac{|E|^2}{E_g^{1/2}} \cdot \exp\left( - B_{Kane} \cdot \frac{E_g^{3/2}}{|E|} \right)$$
-where $A_{Kane}$ and $B_{Kane}$ are calibrated parameters for silicon ($A_{Kane} \approx 4.0\times 10^{14}\text{ cm}^{-1/2}\text{V}^{-2}\text{s}^{-1}$, $B_{Kane} \approx 1.9\times 10^{7}\text{ V/cm}\cdot\text{eV}^{-3/2}$).
+### B. Dynamic Non-Local Hurkx Band-to-Band Tunneling (BTBT)
+Tunneling across the source-channel interface ($X = 10\text{ nm}$) is evaluated dynamically along the curved electric field lines using the Hurkx model (`sdevice_des.tcl`):
 
-### C. Landau-Khalatnikov (L-K) Ferroelectric Equation
-The polarization state $P$ of the ferroelectric layer ($\text{HfO}_2$) is governed by the dynamic Ginzburg-Landau equation:
-$$\rho \frac{\partial P}{\partial t} + \nabla_P F = E_{fe}$$
-$$F(P) = \alpha P^2 + \beta P^4 + \gamma P^6 - E_{fe} P$$
-In the steady-state DC regime ($\partial P/\partial t \rightarrow 0$), the negative stiffness region ($\alpha < 0$) produces internal voltage amplification without hysteresis when stabilized in series with gate capacitance $C_{int}$:
-$$V_{internal} = V_{GS} + \frac{Q_{gate}}{|C_{fe}|}$$
+$$G_{BTBT} = A \cdot D \cdot \left(\frac{E}{E_0}\right)^P \exp\left(-\frac{B}{E}\right)$$
+
+where:
+- Prefactor $A = 8.9770 \times 10^{20}\text{ cm}^{-1}\text{s}^{-1}\text{V}^{-2}$
+- Exponential field $B = 2.1466 \times 10^{7}\text{ V/cm}$
+- Phonon energy $\hbar\Omega = 18.6\text{ meV}$
+- Evaluated with non-local path length $= 30\text{ nm}$ and permeation depth $= 3\text{ nm}$.
+
+### C. Landau-Devonshire Ferroelectric Negative Capacitance
+The ferroelectric gate stack (`hfo2t`, `hfo2b`) is simulated via native Landau-Devonshire theory:
+
+$$E_{FE} = 2 \alpha P + 4 \beta P^3 + 6 \gamma P^5$$
+
+Parameters configured in `parameter/sdevice.par`:
+- $\alpha = -3.7 \times 10^{10}\text{ cm/F}$
+- $\beta = 2.5 \times 10^{21}\text{ cm}^5/(\text{F}\cdot\text{C}^2)$
+- $\gamma = 0.0$
+- Permittivity $\epsilon_{FE} = 31.0$
+
+### D. Bandgap Narrowing (OldSlotboom)
+In the heavily doped source ($N_D = 10^{19}\text{ cm}^{-3}$) and drain ($N_D = 10^{20}\text{ cm}^{-3}$):
+
+$$\Delta E_g = E_{bgn} \left( \ln\left(\frac{N}{N_{ref}}\right) + \sqrt{\left(\ln\left(\frac{N}{N_{ref}}\right)\right)^2 + 0.5} \right)$$
+with $E_{bgn} = 9.0\text{ meV}$ and $N_{ref} = 1.0 \times 10^{17}\text{ cm}^{-3}$.
 
 ---
 
-## 3. Mesh Strategy & Numerical Convergence Settings
+## 3. Numerical Convergence and Solver Strategy
 
-1. **Spatial Discretization**:
-   - Total device length: $150\text{ nm}$.
-   - Bulk regions: Minimum grid step $\Delta x = 2.0\text{ nm}, \Delta y = 2.0\text{ nm}$.
-   - Refinement Box at Tunneling Junction ($X \in [40, 60]\text{ nm}$):
-     - $\Delta x_{min} = 0.2\text{ nm}$
-     - $\Delta y_{min} = 0.2\text{ nm}$
-     - Refinement ratio: $1.2$
-   - Nanocavity Boundary: Conforming triangular mesh with sub-nanometer resolution ($\Delta x \le 0.5\text{ nm}$) to resolve sharp electric field gradients.
-
-2. **Nonlinear Solver Settings**:
-   - Primary solver: Coupled Newton-Raphson scheme with norm-damping.
-   - Relative error tolerance: $10^{-5}$
-   - Maximum iterations per bias step: 25
-   - Adaptive step control: Gate bias increment drops from $0.05\text{ V}$ to $0.001\text{ V}$ upon steep current onset ($SS < 60\text{ mV/dec}$) to prevent divergence.
+The solver configuration in [`sdevice_des.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/device/sdevice_des.tcl) utilizes:
+1. **Newton Convergence Settings**:
+   - `Digits = 8`
+   - `RelErrControl`
+   - `ErRef(Electron) = 1e8`
+   - `Iterations = 25` (Coupled Poisson-Electron)
+   - `TensorGridAniso` anisotropic grid interpolation
+2. **Two-Stage Quasistationary Solution**:
+   - Stage 1: Ramp drain electrode to $V_{DS} = 1.0\text{ V}$ with adaptive step size ($10^{-6}\text{ to }0.2\text{ V}$).
+   - Stage 2: Ramp gate electrode $V_{GS}$ from $0.0\text{ V}$ to $1.5\text{ V}$ (`DoZero`, increment 1.2, min step $10^{-6}\text{ V}$).

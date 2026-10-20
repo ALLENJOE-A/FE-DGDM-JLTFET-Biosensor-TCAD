@@ -1,57 +1,93 @@
 # Parameter Sweeps and Simulation Findings
 **Project:** Ferroelectric Double-Gate Doping-Modulated Junctionless Tunnel FET (FE-DGDM-JLTFET) Biosensor TCAD  
-**Repository:** [ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD](https://github.com/ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD)
+**Repository:** [ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD](https://github.com/ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD)  
+**Authors:** Allen Joe A (24BVD1100), Guided by: Lakshmi B  
+**Reference:** IEEE Sensors Journal, Vol. 24, No. 22, pp. 37923-37930 (Nov 2024)
 
 ---
 
 ## 1. Overview
 
-The TCAD investigation examined three orthogonal design parameters to optimize steep-slope switching and quantify label-free biosensing sensitivity:
-1. **Ferroelectric Dielectric Constant ($K$)**: Investigated gate-to-channel capacitive matching and negative capacitance internal voltage amplification ($K = 1, 3, 5, 7, 12, 22$).
-2. **Nanocavity Thickness ($t_{cav}$)**: Evaluated the trade-off between gate coupling and receptor volume ($t_{cav} = 30, 35, 40\text{ nm}$).
-3. **Interface Fixed Charge ($Q_F$)**: Quantified biomolecule electrostatic transduction across negative and positive polarities ($Q_F = \pm 10^{10}, \pm 5\times 10^{11}, \pm 10^{12}\text{ cm}^{-2}$).
+The TCAD investigation examined three parameter sweeps to evaluate device performance and label-free biosensing capability:
+1. **Cavity Length Variation ($L_{cav}$)**: Investigated the effect of nanocavity length ($L_{cav} = 30\text{ nm}, 35\text{ nm}, 40\text{ nm}$) on on-state drive current, off-state leakage, and switching ratio at constant cavity thickness ($T_{cav} = 3\text{ nm}$).
+2. **Nanocavity Dielectric Constant ($K$)**: Evaluated dielectric modulation across a library of target biological analytes ($K = 1, 3, 5, 7, 12, 22$) to establish label-free sensitivity against the air reference ($K = 1$).
+3. **Interface Fixed Charge ($Q_F$)**: Quantified electrostatic modulation across positive and negative biomolecule charges ($Q_F = \pm 10^{10}, \pm 5\times 10^{11}, \pm 10^{12}\text{ cm}^{-2}$).
 
 ---
 
-## 2. Quantitative Findings Summary Table
+## 2. Quantitative Performance Parameters
 
-The following metrics were quantitatively extracted from the simulated transfer characteristics (`Results/raw_data/extracted_metrics_summary.csv`):
+### Table I: Cavity Length Variation
 
-| Sweep Parameter | Condition | $I_{ON}$ ($\mu\text{A}/\mu\text{m}$) | $I_{OFF}$ ($\text{A}/\mu\text{m}$) | $I_{ON}/I_{OFF}$ Ratio | $V_{TH}$ (V) | $SS_{avg}$ (mV/dec) |
-|:---|:---|:---:|:---:|:---:|:---:|:---:|
-| **Ferroelectric $K$** | $K = 22$ ($\text{HfO}_2$) | **187.3** | $7.62\times 10^{-15}$ | $2.5\times 10^{10}$ | **0.42** | **45.2** |
-| | $K = 12$ | 175.5 | $3.12\times 10^{-15}$ | $5.6\times 10^{10}$ | 0.48 | 54.7 |
-| | $K = 7$ | 169.2 | $1.45\times 10^{-15}$ | $1.2\times 10^{11}$ | 0.53 | 58.6 |
-| | $K = 5$ | 165.3 | $8.20\times 10^{-16}$ | $2.0\times 10^{11}$ | 0.57 | 62.1 |
-| | $K = 3$ | 161.2 | $4.10\times 10^{-16}$ | $3.9\times 10^{11}$ | 0.62 | 68.4 |
-| | $K = 1$ (Air-like) | 160.3 | $1.20\times 10^{-16}$ | $1.3\times 10^{12}$ | 0.69 | 74.8 |
-| **Cavity Thickness** | $t_{cav} = 30\text{ nm}$ | **154.0** | $2.10\times 10^{-18}$ | **$7.3\times 10^{13}$** | **0.51** | **52.3** |
-| | $t_{cav} = 35\text{ nm}$ | 140.0 | $6.50\times 10^{-18}$ | $2.2\times 10^{13}$ | 0.54 | 56.1 |
-| | $t_{cav} = 40\text{ nm}$ | 125.0 | $1.80\times 10^{-17}$ | $6.9\times 10^{12}$ | 0.58 | 61.4 |
-| **Negative $Q_F$** (DNA/Acidic) | $Q_F = -10^{10}\text{ cm}^{-2}$ | 108.0 | $1.80\times 10^{-17}$ | $6.0\times 10^{12}$ | 0.52 | 53.4 |
-| | $Q_F = -5\times 10^{11}\text{ cm}^{-2}$ | 101.0 | $8.50\times 10^{-18}$ | $1.2\times 10^{13}$ | 0.56 | 56.8 |
-| | $Q_F = -10^{12}\text{ cm}^{-2}$ | 94.6 | $3.20\times 10^{-18}$ | $3.0\times 10^{13}$ | 0.61 | 62.0 |
-| **Positive $Q_F$** (Basic Protein) | $Q_F = +10^{10}\text{ cm}^{-2}$ | 130.0 | $8.38\times 10^{-15}$ | $1.6\times 10^{10}$ | 0.49 | 54.1 |
-| | $Q_F = +5\times 10^{11}\text{ cm}^{-2}$ | 134.0 | $4.64\times 10^{-14}$ | $2.9\times 10^{9}$ | 0.46 | 55.3 |
-| | $Q_F = +10^{12}\text{ cm}^{-2}$ | 137.0 | $2.50\times 10^{-13}$ | $5.5\times 10^{8}$ | 0.43 | 57.0 |
+All quantities are extracted directly from the consolidated Sentaurus simulation records ($V_{DS} = 1.0\text{ V}$):
+
+| Cavity Length ($L_{cav}$) | $V_{th}$ (V) | $I_{ON}$ (mA) | $I_{OFF}$ (A) | $I_{ON}/I_{OFF}$ Ratio | $g_m$ (mS) | $SS$ (mV/dec) |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **30 nm** | **0.4010** | **0.8040** | $1.11 \times 10^{-12}$ | **$7.2432 \times 10^8$** | 0.6110 | 61.0 |
+| **35 nm** | 0.3969 | 0.1970 | $1.12 \times 10^{-12}$ | $1.7589 \times 10^8$ | 0.6099 | 59.0 |
+| **40 nm** | 0.3969 | 0.1908 | $1.10 \times 10^{-12}$ | $1.7345 \times 10^8$ | 0.6135 | 59.8 |
+
+> **Key Observation:** The 30 nm cavity achieves the highest on-state current ($0.8040\text{ mA}$) and maximum switching ratio ($7.24 \times 10^8$), outperforming the 35 nm and 40 nm designs by over $4\times$ in drive current.
 
 ---
 
-## 3. Physical Analysis & Discussion
+### Table II: Biomolecule Dielectric Constant ($K$) Modulation
 
-### A. Ferroelectric Dielectric Constant ($K$) Trends
-- **Subthreshold Swing Reduction**: Transitioning from low permittivity ($K=1, SS=74.8\text{ mV/dec}$) to ferroelectric high-$\kappa$ ($K=22, SS=45.2\text{ mV/dec}$) successfully breaks the classical Boltzmann limit ($60\text{ mV/dec}$ at $300\text{ K}$).
-- **Threshold Voltage Shift**: The enhanced gate capacitance shifts the onset of band-to-band tunneling from $V_{GS} = 0.69\text{ V}$ down to $V_{GS} = 0.42\text{ V}$ ($\Delta V_{TH} = -270\text{ mV}$), enabling low-voltage supply operation ($V_{DD} \le 1.0\text{ V}$).
-- **Drive Current Amplification**: $I_{ON}$ increases by $+16.8\%$ due to heightened peak electric field at the tunnel junction.
+Target analyte dielectric constants simulated in the 30 nm nanocavity:
 
-### B. Cavity Thickness Trends
-- **Capacitive Coupling**: As cavity thickness increases from $30\text{ nm}$ to $40\text{ nm}$, gate-to-channel control degrades due to increased equivalent oxide thickness ($EOT$), causing a modest drop in drive current ($154\ \mu\text{A}/\mu\text{m} \rightarrow 125\ \mu\text{A}/\mu\text{m}$).
-- **Leakage Floor**: $I_{OFF}$ remains ultra-low ($< 2\times 10^{-17}\text{ A}/\mu\text{m}$), yielding switching ratios exceeding $10^{12}$ across all three cavity thicknesses.
+| Dielectric Constant ($K$) | Target Analyte | $V_{th}$ (V) | $I_{ON} / I_{DS}$ (mA) | $I_{ON}/I_{OFF}$ Ratio | $g_m$ (mS) | $SS$ (mV/dec) |
+|:---:|:---|:---:|:---:|:---:|:---:|:---:|
+| **1 (Air)** | Baseline Reference | *Not reported* | **0.2040** | *Not reported* | *Not reported* | *Not reported* |
+| **3** | Lipids | 0.4139 | 0.2050 | $1.5769 \times 10^8$ | *Not reported* | 60.10 |
+| **5** | Carbohydrates | 0.4080 | 0.2120 | $1.7097 \times 10^8$ | 0.430 | 62.90 |
+| **7** | Zein Protein | 0.4055 | 0.2160 | $1.9817 \times 10^8$ | 0.550 | 62.90 |
+| **12** | Amino Acids | 0.4020 | 0.2257 | $2.0706 \times 10^8$ | 0.582 | 62.60 |
+| **22** | MDA-MB-231 (Breast Cancer) | **0.3910** | **0.2410** | **$1.8538 \times 10^8$** | **0.650** | **62.07** |
 
-### C. Biomolecule Transduction & Sensitivity
-- **Sensitivity Metric ($\Delta V_{TH} / \Delta Q_F$)**:
-  - Across the investigated negative fixed charge range ($-10^{10}$ to $-10^{12}\text{ cm}^{-2}$), the threshold voltage shifts by **$+90\text{ mV}$** ($0.52\text{ V} \rightarrow 0.61\text{ V}$).
-  - For positive charge ($+10^{10}$ to $+10^{12}\text{ cm}^{-2}$), $V_{TH}$ shifts by **$-60\text{ mV}$** ($0.49\text{ V} \rightarrow 0.43\text{ V}$).
-  - The total dynamic detection span across polarities is **$180\text{ mV}$** ($0.43\text{ V}$ to $0.61\text{ V}$).
-- **Current Modulation Metric ($\Delta I_{DS} / I_0$)**:
-  - At $V_{GS} = 0.5\text{ V}$ (subthreshold sensing bias), the drain current modulates by over **two orders of magnitude** between neutral and charged biomolecule states, proving high electrostatic sensitivity.
+---
+
+### Table III: Calculated Current Sensitivity
+
+Sensitivity is calculated with respect to the air reference ($I_{DS}(air) = 0.2040\text{ mA}$ at $K = 1$):
+$$\text{Sensitivity}(I_{DS}) = \frac{|I_{DS}(bio) - I_{DS}(air)|}{I_{DS}(air)}$$
+
+| Dielectric Constant ($K$) | Target Analyte | $I_{DS}$ (mA) | Sensitivity (Fraction) | Sensitivity (%) |
+|:---:|:---|:---:|:---:|:---:|
+| **1** | Air (Reference) | 0.2040 | 0.0000 | **0.000 %** |
+| **3** | Lipids | 0.2050 | $4.9020 \times 10^{-3}$ | **0.490 %** |
+| **5** | Carbohydrates | 0.2120 | $3.9216 \times 10^{-2}$ | **3.922 %** |
+| **7** | Zein Protein | 0.2160 | $5.8824 \times 10^{-2}$ | **5.882 %** |
+| **12** | Amino Acids | 0.2257 | $1.0637 \times 10^{-1}$ | **10.637 %** |
+| **22** | MDA-MB-231 (Cancer Cell) | 0.2410 | $1.8137 \times 10^{-1}$ | **18.137 %** |
+
+![Benchmark Summary](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/figures/comparative/metrics_benchmark_summary.png)
+
+---
+
+### Table IV: Fixed-Charge ($Q_F$) Polarity Sweep
+
+Evaluating the impact of positive and negative biomolecule surface charges immobilized in the nanocavity at $K = 22$:
+
+| Charge Polarity | Recorded Charge ($Q_F$, $\text{cm}^{-2}$) | Drain Current $I_{DS}$ (mA) |
+|:---|:---:|:---:|
+| **Positive $Q_F$** (Basic proteins / Poly-L-lysine) | $+1.0 \times 10^{10}$ | 0.2416 |
+| | $+5.0 \times 10^{11}$ | 0.2256 |
+| | $+1.0 \times 10^{12}$ | 0.2178 |
+| **Negative $Q_F$** (DNA / RNA / Acidic proteins) | $-1.0 \times 10^{10}$ | 0.2110 |
+| | $-5.0 \times 10^{11}$ | 0.2059 |
+| | $-1.0 \times 10^{12}$ | 0.2040 |
+
+---
+
+## 3. Physical Insights
+
+1. **Dielectric Modulation Mechanism**:
+   - As biomolecules with higher dielectric permittivity ($K=1 \rightarrow 22$) fill the nanocavity, the effective gate oxide capacitance increases.
+   - This tightens electrostatic control over the tunneling junction, lowering the tunneling barrier width and shifting the threshold voltage from $0.4139\text{ V}$ down to $0.3910\text{ V}$.
+   - The on-state drive current increases monotonically, producing a peak sensitivity of **$18.137\%$** for MDA-MB-231 breast cancer cells.
+
+2. **Ferroelectric Negative Capacitance Synergy**:
+   - The $\text{Si:HfO}_2$ layer provides internal voltage amplification ($\partial \psi_s / \partial V_{GS} > 1$), maintaining steep subthreshold swing ($\approx 60\text{--}62\text{ mV/dec}$) and high transconductance ($g_m$ up to $0.650\text{ mS}$).
+
+3. **Cavity Length Optimization**:
+   - The 30 nm cavity places the gate electrode and ferroelectric stack in optimal proximity to the source-channel tunneling interface ($X = 10\text{ nm}$), maximizing band-to-band tunneling generation while maintaining low off-state leakage ($I_{OFF} \approx 1.1 \times 10^{-12}\text{ A}$).

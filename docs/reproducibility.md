@@ -1,33 +1,64 @@
 # Reproducibility Guide
 **Project:** Ferroelectric Double-Gate Doping-Modulated Junctionless Tunnel FET (FE-DGDM-JLTFET) Biosensor TCAD  
-**Repository:** [ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD](https://github.com/ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD)
+**Repository:** [ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD](https://github.com/ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD)  
+**Authors:** Allen Joe A (24BVD1100), Guided by: Lakshmi B  
+**Reference:** IEEE Sensors Journal, Vol. 24, No. 22, pp. 37923-37930 (Nov 2024)
 
 ---
 
 ## 1. Prerequisites and Licensing
 
-### TCAD Environment
+### TCAD Environment (For Full Device Simulation)
 - **Synopsys Sentaurus TCAD** (Version 2018.06 or newer).
 - Modules required:
   - `sde` (Sentaurus Structure Editor)
   - `snmesh` (Sentaurus Mesh)
-  - `sdevice` (Sentaurus Device with Advanced Physics license for Band-to-Band Tunneling and Ferroelectric models)
-  - `inspect` or `svisual` (Visualization and curve extraction)
-- *Note:* Synopsys Sentaurus TCAD is commercial proprietary software subject to university/enterprise licensing.
+  - `sdevice` (Sentaurus Device with non-local band-to-band tunneling and ferroelectric polarization models)
+  - `inspect` or `svisual` (Output curve extraction)
+- Input decks included in this repository:
+  - [`sde/structure/sde_dvs.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sde/structure/sde_dvs.tcl)
+  - [`sdevice/device/sdevice_des.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/device/sdevice_des.tcl)
+  - [`parameter/sdevice.par`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/parameter/sdevice.par)
+  - [`sdevice/physics/physics_models.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/physics/physics_models.tcl)
+  - [`simulations/fe_dgdm_jltfet_simulation.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/simulations/fe_dgdm_jltfet_simulation.tcl)
 
-### Open-Source Data Analysis Environment
+### Open-Source Data Analysis Environment (Without TCAD License)
 - **Python**: Version 3.8 or newer.
 - **Packages**:
   - `numpy`
   - `matplotlib`
   - `pillow` (PIL)
-  - Standard library `csv`
 
 ---
 
-## 2. Reproduction of Data Extraction & Publication Figures
+## 2. Reproducing TCAD Simulations (Sentaurus Environment)
 
-A researcher who does not hold a Synopsys license can fully reproduce all quantitative data extraction, tables, and publication-ready figures using the open-source pipeline provided in this repository.
+### Step 1: Generate Device Geometry and Mesh
+```bash
+# Execute Structure Editor script in Sentaurus SDE
+sde -e -l sde/structure/sde_dvs.tcl
+
+# Build mesh
+snmesh -a n@node@
+```
+
+### Step 2: Run Device Simulations
+```bash
+# Run SDevice with parameter card
+sdevice sdevice/device/sdevice_des.tcl
+```
+
+### Step 3: Automated Parameter Sweeps
+```bash
+# Run Sentaurus Workbench Tcl automation
+swb -batch simulations/fe_dgdm_jltfet_simulation.tcl
+```
+
+---
+
+## 3. Reproducing Data Extraction & Publication Figures
+
+Researchers without a Sentaurus license can regenerate all figures and extracted tables directly from the verified simulation data:
 
 ### Step 1: Clone Repository
 ```bash
@@ -35,42 +66,13 @@ git clone https://github.com/ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD.git
 cd FE-DGDM-JLTFET-Biosensor-TCAD
 ```
 
-### Step 2: Run Metrics Extraction
-```bash
-python analysis/scripts/extract_metrics.py
-```
-*Outputs generated:*
-- `Results/raw_data/k_sweep_transfer.csv`
-- `Results/raw_data/cavity_sweep_transfer.csv`
-- `Results/raw_data/qf_negative_transfer.csv`
-- `Results/raw_data/qf_positive_transfer.csv`
-- `Results/raw_data/extracted_metrics_summary.csv`
-
-### Step 3: Generate Publication-Grade Figures
+### Step 2: Regenerate All Publication Figures
 ```bash
 python analysis/scripts/plot_publication_figures.py
 ```
 *Outputs generated:*
-- `figures/device/device_architecture_schematic.png` (.svg)
-- `figures/electrical/k_sweep_transfer_characteristics.png` (.svg)
-- `figures/sensing/cavity_thickness_transfer_characteristics.png` (.svg)
-- `figures/sensing/fixed_charge_sensitivity_comparison.png` (.svg)
-- `figures/comparative/metrics_benchmark_summary.png` (.svg)
-
----
-
-## 3. Sentaurus TCAD Command Execution Template
-
-When rerun in an authorized Sentaurus environment, the execution sequence proceeds as follows:
-
-```bash
-# 1. Structure definition & meshing
-sde -e -l sde_device.cmd
-snmesh sde_device
-
-# 2. Electrical device simulation
-sdevice sdevice_des.cmd
-
-# 3. Post-processing & extraction
-inspect -f sdevice_des.plt
-```
+- `figures/device/device_architecture_schematic.png` (and `.svg`)
+- `figures/electrical/k_sweep_transfer_characteristics.png` (and `.svg`)
+- `figures/sensing/cavity_thickness_transfer_characteristics.png` (and `.svg`)
+- `figures/sensing/fixed_charge_sensitivity_comparison.png` (and `.svg`)
+- `figures/comparative/metrics_benchmark_summary.png` (and `.svg`)
