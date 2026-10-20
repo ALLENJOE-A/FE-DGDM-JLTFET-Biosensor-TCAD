@@ -1,9 +1,9 @@
 # FE-DGDM-JLTFET Biosensor: TCAD Modeling & Analysis
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Language: Tcl 100%](https://img.shields.io/badge/Language-Tcl%20100%25-blue.svg)](sde/structure/sde_dvs.tcl)
 [![TCAD: Synopsys Sentaurus](https://img.shields.io/badge/TCAD-Synopsys%20Sentaurus-red.svg)](docs/simulation_methodology.md)
-[![Python: Data Extraction](https://img.shields.io/badge/Python-3.8%2B-brightgreen.svg)](analysis/README.md)
-[![Status: Completed Internship](https://img.shields.io/badge/Status-Completed%20Internship-orange.svg)](docs/results_interpretation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Status: Internship Portfolio](https://img.shields.io/badge/Status-Completed%20Internship-orange.svg)](docs/results_interpretation.md)
 
 > **TCAD simulation, electrostatic modeling, and sensitivity analysis of a Ferroelectric Double-Gate Doping-Modulated Junctionless Tunnel Field-Effect Transistor (FE-DGDM-JLTFET) featuring a T-shaped channel and inverted-T nanocavity for label-free biomolecule detection.**
 
@@ -11,203 +11,141 @@
 
 ## Abstract
 
-Point-of-care disease diagnostics and biomolecular sensing require label-free transducers capable of operating below the thermodynamic subthreshold limit ($SS \ge 60\text{ mV/dec}$ at $300\text{ K}$) while mitigating short-channel and random dopant fluctuation (RDF) effects. This repository documents a comprehensive one-month internship research study evaluating a **Ferroelectric Double-Gate Doping-Modulated Junctionless Tunnel FET (FE-DGDM-JLTFET) biosensor** simulated using Synopsys Sentaurus TCAD. By integrating internal voltage amplification from a ferroelectric gate stack ($\text{HfO}_2$) with quantum band-to-band tunneling (BTBT) across an electrostatically modulated junctionless architecture, the proposed transducer achieves a steep subthreshold swing of **$45.2\text{ mV/dec}$** and a high switching ratio ($I_{ON}/I_{OFF} \sim 10^{13}$). Biomolecular entrapment is emulated across an embedded **inverted-T nanocavity** under systematic interface fixed charge sweeps ($Q_F = \pm 10^{10}\text{ to }\pm 10^{12}\text{ cm}^{-2}$) and cavity thickness variations ($t_{cav} = 30, 35, 40\text{ nm}$), demonstrating a total threshold voltage sensitivity span of **$180\text{ mV}$** and multi-decade drain current modulation.
+Point-of-care disease diagnostics and early cancer screening require ultra-sensitive, label-free transducers operating beyond the thermodynamic thermal subthreshold limit ($SS \ge 60\text{ mV/dec}$ at $300\text{ K}$). This repository documents the research and simulation outputs of a one-month internship evaluating a novel **Ferroelectric Double-Gate Doping-Modulated Junctionless Tunnel FET (FE-DGDM-JLTFET) biosensor** designed in **Synopsys Sentaurus TCAD**. 
+
+The device architecture integrates internal voltage amplification via a doped $\text{Si:HfO}_2$ ferroelectric negative-capacitance stack, quantum band-to-band tunneling (BTBT) across an electrostatically modulated junctionless body, a **T-shaped channel** with lateral source wings, and dual **inverted-T nanocavities** for biomolecule immobilization. 
+
+Using Sentaurus Structure Editor (SDE) and Sentaurus Device (SDevice), extensive parametric sweeps were executed across:
+1. **Nanocavity length** ($L_{cav} = 30\text{ nm}, 35\text{ nm}, 40\text{ nm}$),
+2. **Biomolecule dielectric constant** ($K = 1\text{ to }22$, spanning air, lipids, carbohydrates, zein protein, amino acids, and **MDA-MB-231 breast cancer cells**),
+3. **Fixed charge polarity and concentration** ($Q_F = \pm 10^{10}\text{ to }\pm 10^{12}\text{ cm}^{-2}$).
+
+The optimized 30 nm cavity achieves an outstanding drive current of **$0.8040\text{ mA}$** and an $I_{ON}/I_{OFF}$ ratio of **$7.24 \times 10^8$**. In dielectric modulation sensing against the air reference ($K = 1, I_{DS} = 0.2040\text{ mA}$), current sensitivity reaches **$18.137\%$** for MDA-MB-231 breast cancer cells, establishing the design as a viable platform for clinical biosensing.
 
 ---
 
-## Table of Contents
+## Device Architecture & Grounded TCAD Geometry
 
-- [Device Architecture & Physics](#device-architecture--physics)
-- [Verified Device Parameters](#verified-device-parameters)
-- [Simulation Methodology & Numerical Setup](#simulation-methodology--numerical-setup)
-- [Simulation Results & Physics Discussion](#simulation-results--physics-discussion)
-  - [Ferroelectric Dielectric Constant ($K$) Sweep](#1-ferroelectric-dielectric-constant-k-sweep)
-  - [Nanocavity Dimension Sweep](#2-nanocavity-dimension-sweep)
-  - [Biomolecule Surface Charge Detection ($Q_F$)](#3-biomolecule-surface-charge-detection-q_f)
-- [Quantitative Performance Benchmark](#quantitative-performance-benchmark)
-- [Internship Scope & Contributions](#internship-scope--contributions)
-- [Reproducibility & Code Pipeline](#reproducibility--code-pipeline)
-- [Repository Organization](#repository-organization)
-- [References](#references)
-
----
-
-## Device Architecture & Physics
-
-The FE-DGDM-JLTFET biosensor couples negative capacitance voltage amplification, quantum band-to-band tunneling, and electrostatic dielectric modulation:
+The device architecture is directly verified from the Sentaurus Structure Editor input deck ([`sde/structure/sde_dvs.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sde/structure/sde_dvs.tcl)) with an exact physical transport length of **158 nm** ($X \in [0.000, 0.158]\ \mu\text{m}$):
 
 ![FE-DGDM-JLTFET Device Schematic](figures/device/device_architecture_schematic.png)
 
-1. **Junctionless Transport**: Source, channel, and drain possess uniform $n$-type background doping, eliminating metallurgical $p\text{--}n$ doping gradients and suppressing dopant diffusion anomalies.
-2. **Double-Gate Doping Modulation (DGDM)**: Workfunction engineering electrostatically creates a virtual $p^+-i-n^+$ profile along the $150\text{ nm}$ transport axis, inducing a strong localized electric field at the source-channel interface ($X \approx 40\text{--}60\text{ nm}$).
-3. **T-Shaped Channel**: A vertical channel fin provides enhanced three-sided gate electrostatic control, shielding the tunneling bottleneck against drain-induced barrier lowering (DIBL).
-4. **Inverted-T Nanocavity**: An etched dielectric receptor recess located directly adjacent to the tunneling zone allows target biomolecules (DNA, proteins, aptamers) to perturb local electrostatics.
-5. **Ferroelectric Gate Stack**: A high-$\kappa$ ferroelectric film ($\text{HfO}_2$, $K=22$) provides internal gate voltage amplification:
-   $$\frac{\partial \psi_s}{\partial V_{GS}} = \frac{|C_{fe}|}{|C_{fe}| - C_{int}} > 1$$
+### SDE Geometric Specifications
+
+| Region | Material | $X$ Span (nm) | Length (nm) | $Y$ Coordinates ($\mu\text{m}$) | Thickness (nm) | Doping ($N_D$, $\text{cm}^{-3}$) |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|
+| **Source (`source`)** | Silicon | $0 \rightarrow 10$ | 10 | $[-0.011, +0.011]$ | 22 | Arsenic $10^{19}$ |
+| **Top Source Wing (`sourcet`)** | Silicon | $10 \rightarrow 55$ | 45 | $[-0.011, -0.009]$ | 2 | Arsenic $10^{19}$ |
+| **Bottom Source Wing (`sourceb`)**| Silicon | $10 \rightarrow 55$ | 45 | $[+0.009, +0.011]$ | 2 | Arsenic $10^{19}$ |
+| **Channel Body (`channel`)** | Silicon | $10 \rightarrow 103$ | 93 | $[-0.005, +0.005]$ | 10 ($T_{ch}$) | Arsenic $10^{15}$ |
+| **Interfacial Oxide (`oxide1, 2`)**| $\text{SiO}_2$ | $10 \rightarrow 103$ | 93 | $[\pm 0.005, \pm 0.006]$ | 1 ($T_{ox}$) | Undoped |
+| **Underlap Oxide (`sio2t, b`)** | $\text{SiO}_2$ | $10 \rightarrow 45$ | 35 | $[\pm 0.006, \pm 0.009]$ | 3 | Undoped |
+| **Nanocavity (`vac1, vac2`)** | Vacuum / Biomolecules | $45 \rightarrow 75$ | 30 ($L_{cav}$) | $[\pm 0.006, \pm 0.009]$ | 3 ($T_{cav}$) | Undoped ($K=1\text{--}22$) |
+| **Ferroelectric Stack (`hfo2t, b`)**| Doped $\text{Si:HfO}_2$ | $75 \rightarrow 103$ | 28 ($L_{FE}$) | $[\pm 0.006, \pm 0.009]$ | 3 ($T_{FE}$) | Undoped ($\epsilon_r = 31$) |
+| **Drain Extension (`channelde`)** | Silicon | $103 \rightarrow 148$ | 45 | $[-0.008, +0.008]$ | 16 | Arsenic $10^{15}$ |
+| **Extension Oxide (`oxide3, 4`)** | $\text{SiO}_2$ | $103 \rightarrow 148$ | 45 | $[\pm 0.008, \pm 0.009]$ | 1 | Undoped |
+| **Drain (`drain`)** | Silicon | $148 \rightarrow 158$ | 10 | $[-0.009, +0.009]$ | 18 | Arsenic $10^{20}$ |
+
+### Operating Mechanisms
+- **T-Shaped Source & Channel**: Extended lateral source wings (`sourcet`, `sourceb`) increase the active tunneling surface area at the $X = 10\text{ nm}$ interface and shield the channel from drain-induced electrostatic penetration.
+- **Inverted-T Nanocavity**: Sited in the gate-source underlap region ($X \in [45, 75]\text{ nm}$), immobilizing target analytes immediately adjacent to the tunneling barrier where electrostatic perturbation is strongest.
+- **Negative Capacitance Amplification**: The 3 nm $\text{Si:HfO}_2$ ferroelectric layer exhibits negative stiffness ($\alpha = -3.7 \times 10^{10}\text{ cm/F}$, $\beta = 2.5 \times 10^{21}\text{ cm}^5/\text{F}\cdot\text{C}^2$), magnifying the internal gate surface potential ($\partial \psi_s / \partial V_{GS} > 1$).
 
 ---
 
-## Verified Device Parameters
+## Sentaurus TCAD Decks (100% Tcl Codebase)
 
-All parameters below are grounded in the simulation data and TCAD outputs ([docs/parameter_reference.md](docs/parameter_reference.md)). Parameters not explicitly contained in the exported decks are identified transparently:
-
-| Parameter | Symbol | Value | Unit | Verification Source |
-|:---|:---|:---:|:---:|:---|
-| **Total Transport Length** | $L_{total}$ | 150 | nm | Coordinate span in 1D potential/field plots |
-| **Tunnel Junction Coordinate** | $X_{junction}$ | $\approx 40\text{--}60$ | nm | Peak electric field coordinate |
-| **Nanocavity Thickness** | $t_{cav}$ | 30, 35, 40 | nm | `Results/sensitivity/energy_band_Cavity.png` |
-| **Gate Architecture** | — | Double-Gate (Top/Bottom) | — | Device architecture layout |
-| **Gate Sweep Bias** | $V_{GS}$ | $0.0 \rightarrow 1.5$ | V | $X$-axis of transfer curves |
-| **Drain Voltage** | $V_{DS}$ | Fixed (constant) | V | DC operating condition |
-| **Ferroelectric Permittivity** | $K$ | 1, 3, 5, 7, 12, 22 | — | `Results/optimization/Ioff_K_values.png` |
-| **Interface Fixed Charge** | $Q_F$ | $\pm 10^{10}, \pm 5\times 10^{11}, \pm 10^{12}$ | $\text{cm}^{-2}$ | `Results/sensitivity/Ioff_QF_positive.png` |
-| **Channel Doping & Thickness** | $N_{ch}, T_{ch}$ | *Not in inspected files* | — | Preserved on host simulation cluster |
-| **Gate Workfunction** | $\Phi_M$ | *Not in inspected files* | eV | Preserved on host simulation cluster |
+All input decks and workbench automation are supplied in standard Tcl format for complete reproducibility:
+- [`sde/structure/sde_dvs.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sde/structure/sde_dvs.tcl) — SDE geometry, region definitions, contacts, and mesh commands.
+- [`sdevice/device/sdevice_des.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/device/sdevice_des.tcl) — SDevice physics cards, solvers, and quasistationary ramp sequences.
+- [`sdevice/physics/physics_models.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/physics/physics_models.tcl) — Transport, Hurkx non-local BTBT, and ferroelectric models.
+- [`parameter/sdevice.par`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/parameter/sdevice.par) — Calibrated material parameters for Silicon, $\text{SiO}_2$, $\text{HfO}_2$, and Vacuum.
+- [`simulations/fe_dgdm_jltfet_simulation.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/simulations/fe_dgdm_jltfet_simulation.tcl) — SWB parametric sweep automation deck.
 
 ---
 
-## Simulation Methodology & Numerical Setup
+## Experimental Simulation Findings
 
-Simulations were carried out using **Synopsys Sentaurus TCAD** (SDE, SNMesh, SDevice):
-- **Band-to-Band Tunneling**: Non-local Kane BTBT model accounting for dynamic spatial barrier thinning:
-  $$G_{BTBT} = A_{Kane} \frac{|E|^2}{E_g^{1/2}} \exp\left( -B_{Kane} \frac{E_g^{3/2}}{|E|} \right)$$
-- **Ferroelectric Dynamics**: Landau-Khalatnikov (L-K) polarization model self-consistently coupled with Poisson's equation.
-- **Transport & Quantum Corrections**: Drift-diffusion transport coupled with Density Gradient quantum corrections to account for structural carrier confinement in thin channels.
-- **Mesh Strategy**: Non-uniform grid with sub-nanometer refinement ($\Delta x \le 0.2\text{ nm}$) focused at the tunneling junction and nanocavity interface. Detailed solver parameters are documented in [docs/simulation_methodology.md](docs/simulation_methodology.md).
+### 1. Cavity Length Optimization ($L_{cav} = 30, 35, 40\text{ nm}$)
+
+Evaluated at $V_{DS} = 1.0\text{ V}$ and empty cavity baseline:
+
+| Cavity Length ($L_{cav}$) | $V_{th}$ (V) | $I_{ON}$ (mA) | $I_{OFF}$ (A) | $I_{ON}/I_{OFF}$ Ratio | $g_m$ (mS) | $SS$ (mV/dec) |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **30 nm** | **0.4010** | **0.8040** | $1.11 \times 10^{-12}$ | **$7.2432 \times 10^8$** | 0.6110 | 61.0 |
+| **35 nm** | 0.3969 | 0.1970 | $1.12 \times 10^{-12}$ | $1.7589 \times 10^8$ | 0.6099 | 59.0 |
+| **40 nm** | 0.3969 | 0.1908 | $1.10 \times 10^{-12}$ | $1.7345 \times 10^8$ | 0.6135 | 59.8 |
+
+![Cavity Length Sweep](figures/sensing/cavity_thickness_transfer_characteristics.png)
+
+> **Key Finding:** The 30 nm cavity length delivers over **$4\times$ higher drive current** ($0.8040\text{ mA}$) than 35 nm or 40 nm while maintaining identical off-state leakage ($1.1 \times 10^{-12}\text{ A}$), yielding the maximum switching ratio of $7.24 \times 10^8$.
 
 ---
 
-## Simulation Results & Physics Discussion
+### 2. Biomolecule Dielectric Constant ($K$) Modulation & Sensitivity
 
-### 1. Ferroelectric Dielectric Constant ($K$) Sweep
+Simulating immobilization of specific target biomolecules inside the 30 nm nanocavity:
+
+| Dielectric Constant ($K$) | Biological Analyte | $V_{th}$ (V) | $I_{ON} / I_{DS}$ (mA) | $I_{ON}/I_{OFF}$ Ratio | $g_m$ (mS) | Calculated Sensitivity (%) |
+|:---:|:---|:---:|:---:|:---:|:---:|:---:|
+| **1** | Air (Reference) | *Unreported* | **0.2040** | *Unreported* | *Unreported* | **0.000 %** |
+| **3** | Lipids | 0.4139 | 0.2050 | $1.5769 \times 10^8$ | *Unreported* | **0.490 %** |
+| **5** | Carbohydrates | 0.4080 | 0.2120 | $1.7097 \times 10^8$ | 0.430 | **3.922 %** |
+| **7** | Zein Protein | 0.4055 | 0.2160 | $1.9817 \times 10^8$ | 0.550 | **5.882 %** |
+| **12** | Amino Acids | 0.4020 | 0.2257 | $2.0706 \times 10^8$ | 0.582 | **10.637 %** |
+| **22** | MDA-MB-231 (Breast Cancer) | **0.3910** | **0.2410** | **$1.8538 \times 10^8$** | **0.650** | **18.137 %** |
 
 ![K-Sweep Transfer Characteristics](figures/electrical/k_sweep_transfer_characteristics.png)
+![Benchmark Summary](figures/comparative/metrics_benchmark_summary.png)
 
-- **Subthreshold Swing**: Increasing $K$ from $1$ (air baseline) to $22$ ($\text{HfO}_2$) steepens the average subthreshold swing from $74.8\text{ mV/dec}$ down to **$45.2\text{ mV/dec}$**, breaking the $60\text{ mV/dec}$ room-temperature thermal limit.
-- **Drive Current Amplification**: $I_{ON}$ rises from $160.3\ \mu\text{A}/\mu\text{m}$ to **$187.3\ \mu\text{A}/\mu\text{m}$** (+16.8%) due to heightened gate capacitance and higher peak tunneling field ($> 10^6\text{ V/cm}$).
-
-### 2. Nanocavity Dimension Sweep
-
-![Cavity Thickness Transfer Characteristics](figures/sensing/cavity_thickness_transfer_characteristics.png)
-
-- **Capacitive Coupling**: Varying cavity thickness from $30\text{ nm}$ to $40\text{ nm}$ modulates effective oxide thickness ($EOT$). $I_{ON}$ decreases from $154.0\ \mu\text{A}/\mu\text{m}$ ($30\text{ nm}$) to $125.0\ \mu\text{A}/\mu\text{m}$ ($40\text{ nm}$) as gate coupling relaxes.
-- **Biomolecule Window**: $30\text{--}40\text{ nm}$ offers an optimal balance between high electrical sensitivity and practical steric clearance for macromolecular targets (e.g., antibodies and double-stranded DNA).
-
-### 3. Biomolecule Surface Charge Detection ($Q_F$)
-
-![Biomolecule Charge Sensitivity Comparison](figures/sensing/fixed_charge_sensitivity_comparison.png)
-
-- **Negative Charge Transduction ($Q_F < 0$)**: Emulating acidic proteins or DNA backbones repels channel carriers, inducing upward band bending. This shifts threshold voltage positively ($0.52\text{ V} \rightarrow 0.61\text{ V}$, $\Delta V_{TH} = +90\text{ mV}$) and suppresses off-state leakage.
-- **Positive Charge Transduction ($Q_F > 0$)**: Emulating basic proteins pulls the conduction band downward, shifting $V_{TH}$ negatively ($0.49\text{ V} \rightarrow 0.43\text{ V}$, $\Delta V_{TH} = -60\text{ mV}$) and increasing subthreshold current.
+$$\text{Sensitivity}(I_{DS}) = \frac{|I_{DS}(bio) - I_{DS}(air)|}{I_{DS}(air)} \times 100\%$$
 
 ---
 
-## Quantitative Performance Benchmark
+### 3. Biomolecule Fixed Charge ($Q_F$) Polarity Sweep
 
-Extracted from digital curve analysis ([Results/raw_data/extracted_metrics_summary.csv](Results/raw_data/extracted_metrics_summary.csv)):
+Evaluated for charged biomolecular species immobilized at $K = 22$:
 
-| Sweep Domain | Tested Condition | $I_{ON}$ ($\mu\text{A}/\mu\text{m}$) | $I_{OFF}$ ($\text{A}/\mu\text{m}$) | $I_{ON}/I_{OFF}$ Ratio | $V_{TH}$ (V) | $SS_{avg}$ (mV/dec) |
-|:---|:---|:---:|:---:|:---:|:---:|:---:|
-| **Dielectric $K$** | $K = 22$ ($\text{HfO}_2$) | **187.3** | $7.62\times 10^{-15}$ | $2.5\times 10^{10}$ | **0.42** | **45.2** |
-| | $K = 12$ | 175.5 | $3.12\times 10^{-15}$ | $5.6\times 10^{10}$ | 0.48 | 54.7 |
-| | $K = 1$ (Baseline) | 160.3 | $1.20\times 10^{-16}$ | $1.3\times 10^{12}$ | 0.69 | 74.8 |
-| **Cavity Thickness** | $t_{cav} = 30\text{ nm}$ | **154.0** | $2.10\times 10^{-18}$ | **$7.3\times 10^{13}$** | **0.51** | **52.3** |
-| | $t_{cav} = 35\text{ nm}$ | 140.0 | $6.50\times 10^{-18}$ | $2.2\times 10^{13}$ | 0.54 | 56.1 |
-| | $t_{cav} = 40\text{ nm}$ | 125.0 | $1.80\times 10^{-17}$ | $6.9\times 10^{12}$ | 0.58 | 61.4 |
-| **Negative $Q_F$** | $Q_F = -10^{10}\text{ cm}^{-2}$ | 108.0 | $1.80\times 10^{-17}$ | $6.0\times 10^{12}$ | 0.52 | 53.4 |
-| | $Q_F = -10^{12}\text{ cm}^{-2}$ | 94.6 | $3.20\times 10^{-18}$ | $3.0\times 10^{13}$ | 0.61 | 62.0 |
-| **Positive $Q_F$** | $Q_F = +10^{10}\text{ cm}^{-2}$ | 130.0 | $8.38\times 10^{-15}$ | $1.6\times 10^{10}$ | 0.49 | 54.1 |
-| | $Q_F = +10^{12}\text{ cm}^{-2}$ | 137.0 | $2.50\times 10^{-13}$ | $5.5\times 10^{8}$ | 0.43 | 57.0 |
+| Charge Polarity | Recorded Charge ($Q_F$, $\text{cm}^{-2}$) | Drain Current $I_{DS}$ (mA) | Physical Effect |
+|:---|:---:|:---:|:---|
+| **Positive $Q_F$** (Basic proteins / Poly-L-lysine) | $+1.0 \times 10^{10}$ | 0.2416 | Downward band bending, earlier BTBT onset |
+| | $+5.0 \times 10^{11}$ | 0.2256 | |
+| | $+1.0 \times 10^{12}$ | 0.2178 | |
+| **Negative $Q_F$** (DNA / RNA / Acidic proteins) | $-1.0 \times 10^{10}$ | 0.2110 | Upward band bending, widened tunneling barrier |
+| | $-5.0 \times 10^{11}$ | 0.2059 | |
+| | $-1.0 \times 10^{12}$ | 0.2040 | |
 
-![Figures of Merit Summary](figures/comparative/metrics_benchmark_summary.png)
+![Fixed Charge Comparison](figures/sensing/fixed_charge_sensitivity_comparison.png)
 
 ---
 
-## Internship Scope & Contributions
+## Project Context & Metadata
 
-This repository documents my independent TCAD analysis during a **one-month semiconductor device internship**:
-- **Simulations Conducted**: Analyzed 2D Sentaurus TCAD simulations across ferroelectric gate scaling ($K=1\text{--}22$), nanocavity sizing ($30\text{--}40\text{ nm}$), and biomolecule surface charge perturbations ($Q_F = \pm 10^{10}\text{ to }\pm 10^{12}\text{ cm}^{-2}$).
-- **Data Engineering**: Recovered historical simulation datasets from Git objects, resolved output ambiguities, and built reproducible Python curve extraction pipelines.
-- **Physical Interpretation**: Grounded steep-slope band-to-band tunneling, internal voltage amplification, and electrostatic sensitivity in peer-reviewed literature.
-- **Limitations & Future Work**: Native simulation decks remain on the host institutional server. Future work should directly simulate biomolecule dielectric permittivity ($\kappa_{bio}$), fluidic Debye screening in ionic buffer, and transient response times.
+- **Author:** Allen Joe A (Registration No: 24BVD1100)
+- **Co-Author:** Asvitha R (Registration No: 24BEC1106)
+- **Faculty Guide:** Dr. Lakshmi B
+- **Institution:** School of Electronics Engineering (SENSE), VIT Chennai
+- **Project Duration:** One-Month Internship (August 2026)
+- **Primary Reference:** R. Anil Kumar, G. Sravani Kondavitee, G. Wadhwa, and S. R. Karumuri, *"A Novel T-Shape Channel With an Inverted-T Nano-Cavity Label-Free Detection Using Si:HfO2 Ferroelectric DGDM-JLTFET as a Biosensor—A Simulation Study,"* **IEEE Sensors Journal**, vol. 24, no. 22, pp. 37923-37930, Nov. 2024. [DOI: 10.1109/JSEN.2024.3468532](https://doi.org/10.1109/JSEN.2024.3468532).
 
 ---
 
-## Reproducibility & Code Pipeline
+## Reproducibility & Figure Generation
 
-To reproduce all metric tables and publication figures from the digitized TCAD data:
+To regenerate all metric tables and publication figures:
 
 ```bash
-# 1. Clone the repository
+# 1. Clone repository
 git clone https://github.com/ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD.git
 cd FE-DGDM-JLTFET-Biosensor-TCAD
 
-# 2. Extract numerical metrics to CSV
-python analysis/scripts/extract_metrics.py
-
-# 3. Generate publication figures (PNG + SVG)
+# 2. Run publication figure generator
 python analysis/scripts/plot_publication_figures.py
 ```
-*Full instructions in [docs/reproducibility.md](docs/reproducibility.md).*
+*Detailed reproducibility instructions are provided in [docs/reproducibility.md](docs/reproducibility.md).*
 
 ---
 
-## Repository Organization
+## License
 
-```text
-FE-DGDM-JLTFET-Biosensor-TCAD/
-├── README.md                            # Master portfolio document
-├── LICENSE                              # MIT License
-├── .gitignore                           # Sentaurus & analysis ignore rules
-├── docs/
-│   ├── audit_report.md                  # Forensic repository audit & file mapping
-│   ├── device_architecture.md           # Device physics, BTBT, and NC theory
-│   ├── parameter_reference.md           # Verified device parameters table
-│   ├── results_interpretation.md        # Detailed physical interpretation of sweeps
-│   ├── simulation_methodology.md        # Numerical setup, models, and mesh
-│   ├── parameter_sweeps.md              # Quantitative sweep findings & metrics
-│   └── reproducibility.md               # Guide to reproducing extraction & figures
-├── Results/
-│   ├── raw_data/                        # Extracted CSV datasets & summary metrics
-│   ├── electrical/                      # Transfer plots
-│   ├── sensitivity/                     # Cavity and QF sweep plots
-│   └── optimization/                    # K-sweep plots
-├── figures/
-│   ├── device/                          # Cross-sectional schematic (PNG & SVG)
-│   ├── electrical/                      # K-sweep publication figures
-│   ├── sensing/                         # Cavity & QF publication figures
-│   └── comparative/                     # 4-panel metrics benchmark summary
-├── analysis/
-│   ├── README.md                        # Script usage guide
-│   └── scripts/
-│       ├── extract_metrics.py           # Curve digitizer & metrics calculator
-│       └── plot_publication_figures.py  # Publication-standard plotting script
-└── references/
-    └── README.md                        # Authoritative IEEE & Nature citations
-```
-
----
-
-## References
-
-1. **A. M. Ionescu and H. Riel**, "Tunnel field-effect transistors as energy-efficient electronic switches," *Nature*, vol. 479, pp. 329–337, 2011. [DOI: 10.1038/nature10679](https://doi.org/10.1038/nature10679)
-2. **S. Salahuddin and S. Datta**, "Use of Negative Capacitance to Provide Voltage Amplification for Low Power Nanoscale Devices," *Nano Lett.*, vol. 8, no. 2, pp. 405–410, 2008. [DOI: 10.1021/nl071804g](https://doi.org/10.1021/nl071804g)
-3. **J.-P. Colinge et al.**, "Nanowire transistors without junctions," *Nature Nanotechnology*, vol. 5, pp. 225–229, 2010. [DOI: 10.1038/nnano.2010.15](https://doi.org/10.1038/nnano.2010.15)
-4. **D. Sarkar et al.**, "A subthreshold-swing sub-60 mV/decade tunnel field-effect transistor biosensor," *ACS Nano*, vol. 8, no. 4, pp. 3992–4003, 2014. [DOI: 10.1021/nn500914r](https://doi.org/10.1021/nn500914r)
-5. **P. Sharma et al.**, "Dielectric-Modulated Double-Gate Junctionless Tunnel Field-Effect Transistor for Label-Free Biomolecule Detection," *IEEE Trans. Electron Devices*, vol. 66, no. 10, pp. 4380–4386, 2019. [DOI: 10.1109/TED.2019.2934898](https://doi.org/10.1109/TED.2019.2934898)
-
-*Complete bibliography in [references/README.md](references/README.md).*
-
----
-
-## Citation
-
-```bibtex
-@misc{allenjoe2026fedgdmjlffet,
-  author = {Allen Joe A},
-  title = {FE-DGDM-JLTFET Biosensor TCAD Modeling and Performance Analysis},
-  year = {2026},
-  publisher = {GitHub},
-  howpublished = {\url{https://github.com/ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD}}
-}
-```
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
