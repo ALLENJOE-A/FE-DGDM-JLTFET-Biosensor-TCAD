@@ -1,0 +1,22 @@
+# ==============================================================================
+# GitHub Linguist Overrides
+# Forces repository language detection to report 100% Tcl
+# ==============================================================================
+
+# 1. Exclude all non-Tcl files, scripts, data, and docs from language calculation
+* linguist-detectable=false
+*.py linguist-detectable=false
+*.py linguist-vendored=true
+*.sh linguist-detectable=false
+*.cmd linguist-detectable=false
+*.par linguist-detectable=false
+*.csv linguist-detectable=false
+*.txt linguist-detectable=false
+*.md linguist-detectable=false
+*.svg linguist-detectable=false
+*.png linguist-detectable=false
+*.json linguist-detectable=false
+
+# 2. Exclusively enable Tcl scripts for language detection
+*.tcl linguist-detectable=true
+*.tcl linguist-language=Tcl
