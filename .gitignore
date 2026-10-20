@@ -4,6 +4,8 @@
 *_results/
 *_output/
 *_data/
+!Results/raw_data/
+!results/raw_data/
 
 # Sentaurus generated files
 *.tdr
