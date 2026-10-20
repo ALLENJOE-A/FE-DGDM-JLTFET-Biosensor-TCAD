@@ -1,109 +1,95 @@
 # Device Architecture and Operating Physics
 **Project:** Ferroelectric Double-Gate Doping-Modulated Junctionless Tunnel FET (FE-DGDM-JLTFET) Biosensor TCAD  
-**Repository:** [ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD](https://github.com/ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD)
+**Repository:** [ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD](https://github.com/ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD)  
+**Authors:** Allen Joe A (24BVD1100), Guided by: Lakshmi B  
+**Reference:** IEEE Sensors Journal, Vol. 24, No. 22, pp. 37923-37930 (Nov 2024)
 
 ---
 
-## 1. Device Concept and Architectural Overview
+## 1. Verified Device Architecture (Grounded in SDE Deck)
 
-The **FE-DGDM-JLTFET** (Ferroelectric Double-Gate Doping-Modulated Junctionless Tunnel Field-Effect Transistor) is an advanced steep-slope semiconductor biosensor engineered to overcome the thermodynamic thermal limit ($SS \ge 60\text{ mV/dec}$ at $300\text{ K}$) of conventional MOSFET biosensors while eliminating metallurgical p-n junction doping gradients.
+The **FE-DGDM-JLTFET** biosensor structure is defined in [`sde_dvs.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sde/structure/sde_dvs.tcl) with a total physical transport length of **158 nm** ($X \in [0.000, 0.158]\ \mu\text{m}$).
 
-```
-       Top Gate Contact (Metal)
-  ┌─────────────────────────────────┐
-  │   Ferroelectric Layer (HfO2)   │
-  ├──────────────┬──────────────────┤
-  │ Gate Oxide   │   Nanocavity     │ (Inverted-T Biomolecule Region)
-  ├──────────────┴───┬──────────────┤
-  │                  │              │
-  │   Source         │   Channel    │   Drain
-  │  (n+ uniform)    │  (T-shaped)  │  (n+ uniform)
-  │                  │              │
-  ├──────────────────┴──────────────┤
-  │       Bottom Gate Oxide         │
-  ├─────────────────────────────────┤
-  │ Bottom Ferroelectric Layer      │
-  ├─────────────────────────────────┤
-  │   Bottom Gate Contact (Metal)   │
-  └─────────────────────────────────┘
-  ◄───────────── 150 nm ────────────►
-```
+![FE-DGDM-JLTFET Architecture](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/figures/device/device_architecture_schematic.png)
 
-### Core Structural Features
-1. **Junctionless Transport**: The channel, source, and drain regions share a uniform $n$-type doping concentration. The device eliminates physically abrupt metallurgical junctions, mitigating severe thermal diffusion and random dopant fluctuation (RDF) issues common in sub-20 nm scale devices.
-2. **Double-Gate Doping Modulation (DGDM)**: The effective carrier density along the channel is modulated electrostatically by unequal or workfunction-engineered dual gates, creating an effective $p^+ - i - n^+$ electrostatic potential profile required for band-to-band tunneling (BTBT).
-3. **T-Shaped Channel Geometry**: The channel cross-section incorporates a vertical extension (T-shape) that enhances gate electrostatic controllability, increases the tunneling surface area, and shields the channel interior from drain-induced barrier lowering (DIBL).
-4. **Inverted-T Nanocavity**: A carved dielectric recess etched adjacent to the channel/tunnel junction serves as the receptor cavity for immobilizing target biomolecules (e.g., proteins, DNA, viral antigens). Its inverted-T profile provides high surface-to-volume capture area near the most sensitive electrostatic bottleneck: the tunneling junction.
-5. **Ferroelectric Gate Stack**: Incorporating a ferroelectric thin film (such as doped $\text{HfO}_2$, e.g., $\text{Hf}_{0.5}\text{Zr}_{0.5}\text{O}_2$) within the gate dielectric stack provides negative capacitance (NC) amplification ($|C_{fe}|$), magnifying the channel surface potential beyond the applied physical gate voltage:
-   $$\frac{\partial \psi_s}{\partial V_{GS}} = \frac{|C_{fe}|}{|C_{fe}| - C_{int}} > 1$$
+### Geometric Breakdown and Coordinates (TCAD SDE Specification)
+
+| Region Name | Material | X Start ($\mu\text{m}$) | X End ($\mu\text{m}$) | Length (nm) | Y Range ($\mu\text{m}$) | Thickness (nm) | Active Doping ($N_D$, $\text{cm}^{-3}$) |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Source (`source`)** | Silicon | $0.000$ | $0.010$ | 10 | $[-0.011, +0.011]$ | 22 | Arsenic $1.0 \times 10^{19}$ |
+| **Top Source Wing (`sourcet`)** | Silicon | $0.010$ | $0.055$ | 45 | $[-0.011, -0.009]$ | 2 | Arsenic $1.0 \times 10^{19}$ |
+| **Bottom Source Wing (`sourceb`)** | Silicon | $0.010$ | $0.055$ | 45 | $[+0.009, +0.011]$ | 2 | Arsenic $1.0 \times 10^{19}$ |
+| **Channel Body (`channel`)** | Silicon | $0.010$ | $0.103$ | 93 | $[-0.005, +0.005]$ | 10 ($T_{ch}$) | Arsenic $1.0 \times 10^{15}$ |
+| **Interfacial Oxide (`oxide1`)** | $\text{SiO}_2$ | $0.010$ | $0.103$ | 93 | $[-0.006, -0.005]$ | 1 | Undoped |
+| **Interfacial Oxide (`oxide2`)** | $\text{SiO}_2$ | $0.010$ | $0.103$ | 93 | $[+0.005, +0.006]$ | 1 | Undoped |
+| **Underlap Oxide (`sio2t`, `sio2b`)** | $\text{SiO}_2$ | $0.010$ | $0.045$ | 35 | $[\pm 0.006, \pm 0.009]$ | 3 | Undoped |
+| **Nanocavity (`vac1`, `vac2`)** | Vacuum / Biomolecules | $0.045$ | $0.075$ | 30 ($L_{cav}$) | $[\pm 0.006, \pm 0.009]$ | 3 ($T_{cav}$) | Undoped ($K = 1\text{--}22$) |
+| **Ferroelectric Stack (`hfo2t`, `hfo2b`)** | Doped $\text{Si:HfO}_2$ | $0.075$ | $0.103$ | 28 ($L_{FE}$) | $[\pm 0.006, \pm 0.009]$ | 3 ($T_{FE}$) | Undoped ($\epsilon_r = 31$) |
+| **Drain Extension (`channelde`)** | Silicon | $0.103$ | $0.148$ | 45 | $[-0.008, +0.008]$ | 16 | Arsenic $1.0 \times 10^{15}$ |
+| **Extension Oxide (`oxide3`, `oxide4`)** | $\text{SiO}_2$ | $0.103$ | $0.148$ | 45 | $[\pm 0.008, \pm 0.009]$ | 1 | Undoped |
+| **Drain (`drain`)** | Silicon | $0.148$ | $0.158$ | 10 | $[-0.009, +0.009]$ | 18 | Arsenic $1.0 \times 10^{20}$ |
 
 ---
 
-## 2. Operating Physics and Transport Mechanism
+## 2. Key Architectural Innovations
 
-### Band-to-Band Tunneling (BTBT)
-Unlike conventional MOSFETs where carriers surmount a thermionic energy barrier ($E > q\phi_B$), transport in a Tunnel FET is governed by quantum mechanical band-to-band tunneling from the valence band of the source region into the conduction band of the channel region.
+### A. T-Shaped Channel & Extended Source Wings
+- The source features a central block ($22\text{ nm}$ height) and top/bottom horizontal extensions (`sourcet` and `sourceb`) extending $45\text{ nm}$ along the transport direction.
+- This creates an effective **T-shaped source-channel interface** that:
+  1. Enlarges the active tunneling cross-section at the $X = 10\text{ nm}$ junction.
+  2. Enhances gate electrostatic coupling and suppresses ambipolar leakage current.
+  3. Provides an electrostatic shield preventing drain electric field lines from degrading the source tunneling barrier.
+- At $X = 103\text{ nm}$, the channel body steps up from $10\text{ nm}$ to $16\text{ nm}$ (`channelde`), providing low series resistance into the drain while maintaining strict sub-10 nm body confinement under the gate.
 
-The transmission probability $T_{WKB}$ through the triangular electrostatic barrier is modeled using the Wentzel-Kramers-Brillouin (WKB) approximation:
-$$T_{WKB} \approx \exp\left( - \frac{4 \sqrt{2 m^*} E_g^{3/2}}{3 q \hbar |E|} \right)$$
-where:
-- $m^*$ is the carrier effective tunneling mass.
-- $E_g$ is the semiconductor bandgap.
-- $|E|$ is the localized electric field at the tunnel junction.
-- $\hbar$ is the reduced Planck constant.
+### B. Inverted-T Nanocavity (Bio-Capture Region)
+- The nanocavity is situated in the gate-source underlap region ($X \in [45, 75]\text{ nm}$), directly upstream of the ferroelectric gate stack.
+- Etched as an inverted-T recess, it captures target biomolecules directly above and below the thin silicon channel separated only by an ultra-thin 1 nm $\text{SiO}_2$ passivation layer.
+- This positioning ensures that dielectric constant variations ($\Delta K$) and immobilized charges ($Q_F$) produce maximum electrostatic perturbation at the channel surface where band bending modulates the tunneling barrier width.
 
-The drain current is directly proportional to the transmission coefficient integrated across the tunneling energy window:
-$$I_{DS} \propto \int_{E_C^{channel}}^{E_V^{source}} T_{WKB}(E) [f_S(E) - f_D(E)] dE$$
+### C. Doping-Modulated Junctionless (DM-JL) Operation
+- All silicon regions are $n$-type doped, eliminating metallurgical $p\text{--}n$ junctions and abrupt doping gradients:
+  - Source: Heavily doped $n^+$ ($10^{19}\text{ cm}^{-3}$).
+  - Channel: Lightly doped $n$ ($10^{15}\text{ cm}^{-3}$).
+  - Drain Extension: Lightly doped $n$ ($10^{15}\text{ cm}^{-3}$).
+  - Drain: Ultra-heavily doped $n^{++}$ ($10^{20}\text{ cm}^{-3}$).
+- Carrier injection relies on band-to-band tunneling induced by gate-to-source bias rather than thermionic emission over a forward-biased junction.
 
-### Subthreshold Swing Amplification
-The total subthreshold swing ($SS$) is the product of body factor $m$ and transport factor $n$:
-$$SS = \frac{\partial V_{GS}}{\partial \log_{10}(I_{DS})} = \underbrace{\frac{\partial V_{GS}}{\partial \psi_s}}_{m} \times \underbrace{\frac{\partial \psi_s}{\partial \log_{10}(I_{DS})}}_{n}$$
-- In classical MOSFETs, $m \ge 1$ and $n \ge 60\text{ mV/dec}$ at room temperature, yielding $SS \ge 60\text{ mV/dec}$.
-- In the FE-DGDM-JLTFET, the negative capacitance effect delivers $m < 1$ (internal voltage amplification), while BTBT filtering delivers $n < 60\text{ mV/dec}$ at low currents, enabling steep switching and high current sensitivity.
-
----
-
-## 3. Biosensing Transduction Mechanism
-
-Target biomolecules (enzymes, antibodies, nucleic acids) carry intrinsic net electrostatic charges and possess distinct dielectric constants ($\kappa_{bio} \approx 2\text{--}10$).
-
-```
-Biomolecule binding in nanocavity
-        ↓
-Interface fixed charge (QF) & permittivity modulation
-        ↓
-Modulation of local electrostatic potential (Δψs)
-        ↓
-Change in tunneling barrier width (λ) & electric field (E)
-        ↓
-Exponential shift in tunneling transmission (TWKB)
-        ↓
-Macroscopic threshold voltage shift (ΔVTH) & current modulation (ΔIDS)
-```
-
-1. **Negative Charge Transduction ($Q_F < 0$)**:
-   - Capturing negatively charged biomolecules (such as DNA/RNA chains or acidic proteins) introduces a negative sheet charge in the nanocavity.
-   - This increases the electrostatic barrier height and modulates the gate-to-channel potential, shifting the effective threshold voltage ($V_{TH}$).
-2. **Positive Charge Transduction ($Q_F > 0$)**:
-   - Basic proteins or amine-functionalized ligands induce positive fixed charge ($Q_F > 0$).
-   - This lowers the local conduction band edge, alters the tunneling alignment, and increases off-state leakage ($I_{OFF}$).
-3. **Cavity Dimension Coupling**:
-   - The spatial thickness/length of the nanocavity ($30\text{ nm}, 35\text{ nm}, 40\text{ nm}$) dictates the physical volume of captured biomolecules and the distance over which the gate electrode electrostatically couples to the channel.
+### D. Ferroelectric Negative Capacitance Gate Stack ($\text{Si:HfO}_2$)
+- Sited at $X \in [75, 103]\text{ nm}$, the 3 nm $\text{Si:HfO}_2$ layer provides negative capacitance (NC) amplification:
+  $$C_{ox}^{eff} = \frac{C_{ox} |C_{FE}|}{|C_{FE}| - C_{ox}}$$
+- The stabilized negative capacitance magnifies the internal gate potential, yielding subthreshold swings ($SS$) well below the thermodynamic Boltzmann limit ($60\text{ mV/dec}$ at $300\text{ K}$) and boosting the on-state driving current ($I_{ON}$).
 
 ---
 
-## 4. TCAD Physical Models & Numerics
+## 3. Physical Models & Solvers (SDevice Implementation)
 
-Based on standard Synopsys Sentaurus Device formulation for junctionless tunnel FETs:
-- **Band-to-Band Tunneling**: Non-local path-based dynamic tunneling models (Kane or Hurkx non-local BTBT) to evaluate electron generation rates along curved electric field lines at the source-channel interface.
-- **Quantum Mechanics**: Density Gradient quantum corrections to account for carrier confinement in the ultra-thin T-shaped channel.
-- **Ferroelectrics**: Landau-Khalatnikov (L-K) polarization equation coupled self-consistently with the Poisson equation:
-  $$E_{fe} = 2 \alpha P + 4 \beta P^3 + 6 \gamma P^5 + \rho \frac{\partial P}{\partial t}$$
-- **Mobility & Recombination**:
-  - High-field velocity saturation (Canali model).
-  - Doping-dependent mobility (Masetti model).
-  - Shockley-Read-Hall (SRH) recombination with trap-assisted tunneling (TAT) and Auger recombination.
-- **Boundary Conditions & Bias Ranges**:
-  - Drain Contact: $V_{DS} = \text{constant}$.
-  - Gate Contacts: $V_{GS}$ swept from $0.0\text{ V}$ to $1.5\text{ V}$.
-  - Source Contact: Grounded ($V_S = 0.0\text{ V}$).
+The TCAD simulations employ rigorous quantum-corrected and non-local transport physics configured in [`sdevice_des.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/device/sdevice_des.tcl) and [`sdevice.par`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/parameter/sdevice.par):
+
+1. **Non-Local Hurkx Band-to-Band Tunneling (BTBT)**:
+   - Evaluated dynamically across the source-channel interface:
+     $$R_{net}^{BTBT} = - A \cdot D \cdot \left(\frac{E}{E_0}\right)^P \exp\left(-\frac{B}{E}\right)$$
+   - Hurkx Parameters:
+     - $A = 8.9770 \times 10^{20}\text{ cm}^{-1}\text{s}^{-1}\text{V}^{-2}$
+     - $B = 2.1466 \times 10^{7}\text{ V/cm}$
+     - Phonon energy $\hbar\Omega = 18.6\text{ meV}$
+     - Non-local evaluation length $= 30\text{ nm}$, permeation $= 3\text{ nm}$.
+
+2. **Landau-Devonshire Ferroelectric Polarization (`FEPolarization`)**:
+   - Electric field-polarization constitutive relation:
+     $$E_{FE} = 2 \alpha P + 4 \beta P^3 + 6 \gamma P^5$$
+   - Calibrated parameters for 3 nm $\text{Si:HfO}_2$:
+     - Negative stiffness: $\alpha = -3.7 \times 10^{10}\text{ cm/F}$
+     - Non-linear coefficient: $\beta = 2.5 \times 10^{21}\text{ cm}^5/(\text{F}\cdot\text{C}^2)$
+     - Remanent polarization: $P_r = 1.0\ \mu\text{C/cm}^2$
+     - Saturation polarization: $P_s = 20.0\ \mu\text{C/cm}^2$
+     - Coercive field: $E_c = 1.0\text{ MV/cm}$
+     - Dielectric constant: $\epsilon_{FE} = 31.0$
+
+3. **Carrier Transport & Mobility**:
+   - **Hydrodynamic Transport**: Solves the carrier energy conservation equation alongside Poisson and continuity equations.
+   - **Fermi-Dirac Statistics**: Captures degenerate carrier distributions in the heavily doped source ($10^{19}$) and drain ($10^{20}$).
+   - **OldSlotboom Bandgap Narrowing (BGN)**: $E_{bgn} = 9.0\text{ meV}$, $N_{ref} = 10^{17}\text{ cm}^{-3}$.
+   - **Philips Unified Mobility Model (`PhuMob`)**: Concentration and temperature-dependent lattice scattering.
+   - **Lombardi Surface Roughness Model (`Enormal`)**: Models mobility degradation near the $\text{Si/SiO}_2$ interface.
+   - **Velocity Saturation**: $v_{sat} = 1.01 \times 10^{7}\text{ cm/s}$.
+   - **Recombination**: Scharfetter doping-dependent SRH and Auger recombination.
