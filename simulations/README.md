@@ -1,42 +1,22 @@
-# Simulations Directory
+# TCAD Simulation Decks & Automation
 
-Organized simulation campaigns by device variant.
+This directory contains Sentaurus Workbench (SWB) automation and batch simulation scripts for the FE-DGDM-JLTFET biosensor.
 
-## Structure
+## Files
 
-```
-simulations/
-├── baseline/       # Non-FE JLTFET (empty - needed for comparison)
-├── proposed/       # FE-DGDM-JLTFET main device (empty - SDE/SDevice files needed)
-├── biomolecule/    # Biomolecule-specific simulations (empty)
-└── README.md
-```
+- [`fe_dgdm_jltfet_simulation.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/simulations/fe_dgdm_jltfet_simulation.tcl): Sentaurus Workbench Tcl script to automate parameter sweeps across cavity lengths, biomolecule dielectric constants ($K$), and fixed charges ($Q_F$).
 
-## Current Status
+## Automated Sweeps
 
-All subdirectories are **empty**. The repository only contains post-processed plots in `results/`, not the simulation input decks.
+1. **Cavity Length Variation**:
+   - $L_{cav} \in \{30, 35, 40\}\text{ nm}$ at fixed $T_{cav} = 3\text{ nm}$, $V_{DS} = 1.0\text{ V}$.
+   - Evaluates impact on tunneling electric field, band bending, and $I_{ON}/I_{OFF}$ ratio.
 
-## Intended Use
+2. **Biomolecule Dielectric Constant ($K$)**:
+   - $K \in \{1, 3, 5, 7, 12, 22\}$ at $L_{cav} = 30\text{ nm}$.
+   - Simulates label-free detection from air ($K=1$) up to breast cancer cells MDA-MB-231 ($K=22$).
 
-| Directory | Purpose |
-|-----------|---------|
-| `baseline/` | Standard DG-JLTFET without ferroelectric for direct comparison |
-| `proposed/` | Complete FE-DGDM-JLTFET simulation decks (SDE + SDevice) |
-| `biomolecule/` | Simulations with explicit biomolecule models (charge, dipole, dielectric) |
-
-## Adding Simulations
-
-Each simulation campaign should contain:
-
-```
-simulations/proposed/
-├── sde/
-│   ├── geometry.tdr
-│   ├── doping.tdr
-│   └── mesh.tdr
-├── sdevice/
-│   ├── models.tdr
-│   ├── dc_iv.cmd
-│   └── extract.tcl
-└── results/          # Link to ../results/ or copy outputs
-```
+3. **Fixed Charge Polarity and Density ($Q_F$)**:
+   - Neutral ($Q_F = 0$).
+   - Positive charges ($+10^{10}, +5\times 10^{11}, +10^{12}\text{ cm}^{-2}$).
+   - Negative charges ($-10^{10}, -5\times 10^{11}, -10^{12}\text{ cm}^{-2}$).

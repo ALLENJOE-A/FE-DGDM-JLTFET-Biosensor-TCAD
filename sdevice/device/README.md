@@ -1,53 +1,31 @@
-# SDevice Directory
+# Sentaurus Device (SDevice) Simulation Decks
 
-This directory is intended for Synopsys Sentaurus Device (SDevice) simulation input files.
+This directory contains the verified Sentaurus Device (SDevice) simulation decks for the FE-DGDM-JLTFET biosensor.
 
-## Expected Contents
+## Files
 
-### Device Structure (`device/`)
-- `device.tdr` — Device structure imported from SDE
-- `electrodes.tdr` — Contact bias definitions
+- [`sdevice_des.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/device/sdevice_des.tcl): The primary Sentaurus Device command deck specifying electrodes, transport models, tunneling, recombination, math solvers, and quasistationary ramp sequences.
 
-### Physics Models (`physics/`)
-- `models.tdr` — Physical model selection:
-  - Band-to-band tunneling (BTBT): Hurkx, Schenk, or Kane model
-  - Ferroelectric: Landau-Khalatnikov or Preisach model
-  - Transport: Drift-diffusion / Hydrodynamic / Energy balance
-  - Quantum corrections: Density gradient / Quantum potential
-  - Mobility: Philips unified / Lombardi / High-field saturation
+## Physics and Models Implemented
 
-### Simulation Decks
-- `dc_sweep.cmd` — VGS sweep at fixed VDS
-- `param_sweep.cmd` — Parameter sweep templates (cavity, K, QF)
-- `extract.cmd` — Parameter extraction (Ion, Ioff, SS, VT)
+1. **Carrier Transport**:
+   - Hydrodynamic transport model accounting for non-local carrier heating.
+   - Fermi-Dirac statistics (`Fermi`).
+   - OldSlotboom bandgap narrowing (`EffectiveIntrinsicDensity( OldSlotboom )`).
 
-## Current Status
+2. **Band-to-Band Tunneling (BTBT)**:
+   - Dynamic non-local Hurkx BTBT model at the critical source-channel interface (`Math (RegionInterface="channel/source") { NonLocal(Length=30e-7 Permeation=3e-7 Permeable) }`).
+   - Two-band barrier tunneling transmission for electrons and holes (`eBarrierTunneling`, `hBarrierTunneling`).
 
-**No SDevice input files are present in the current repository.** The plots in `results/` were generated from simulations whose input decks are not included.
+3. **Ferroelectric Polarization**:
+   - Native Landau-Devonshire ferroelectric polarization (`FEPolarization`) applied to top and bottom $\text{HfO}_2$ regions (`hfo2t`, `hfo2b`).
 
-## Physics Models (Inferred from Results)
+4. **Mobility and Recombination**:
+   - Philips Unified Mobility Model (`PhuMob`) for concentration and temperature-dependent mobility.
+   - Lombardi surface-roughness mobility model (`Enormal(Lombardi)`).
+   - High-field saturation (`eHighFieldSaturation(CarrierTempDrive)`, `hHighFieldSaturation(GradQuasiFermi)`).
+   - Doping-dependent Shockley-Read-Hall (SRH) and Auger recombination.
 
-| Physics | Likely Model |
-|---------|--------------|
-| Tunneling | Hurkx or Kane BTBT |
-| Ferroelectric | Landau-Khalatnikov (P-E hysteresis) |
-| Transport | Drift-diffusion + BTBT |
-| Mesh | Non-uniform, refined at junctions |
-
----
-
-## SDevice Workflow
-
-```text
-sdevice
-  ├── device.tdr            # From SDE output
-  ├── models.tdr            # Physics models
-  ├── doping.tdr            # Doping profiles
-  ├── contact.tdr           # Electrode biases
-  ├── dc_iv.cmd             # VGS-VDS sweeps
-  └── extract.tcl           # Parameter extraction scripts
-        ↓
-Run SDevice → generates .dat/.plt files
-        ↓
-Post-process → plots in results/
-```
+5. **Numerical Solvers**:
+   - Fully coupled Newton solver (`Coupled { Poisson Electron }`).
+   - Quasistationary ramping of drain bias ($V_{DS}$) followed by fine-step gate bias ($V_{GS}$) sweep up to goal voltage.

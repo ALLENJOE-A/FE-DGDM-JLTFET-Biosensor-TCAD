@@ -1,0 +1,176 @@
+# ==============================================================================
+# Sentaurus Device Parameter File (sdevice.par)
+# Project: FE-DGDM-JLTFET Biosensor
+# Author: Allen Joe A (24BVD1100), Guided by: Lakshmi B
+# Reference: IEEE Sensors Journal, Vol. 24, No. 22, pp. 37923-37930 (Nov 2024)
+# ==============================================================================
+
+Material = "Silicon" {
+    Band2BandTunneling {
+        A         = 8.9770e+20    # [cm / (s V^2)]
+        B         = 2.1466e+07    # [eV^(-3/2) V/cm]
+        hbarOmega = 0.0186        # [eV]
+        dDist     = 15e-8         # [cm] Min length to interfaces (Hurkx model)
+        dPot      = 0.0000e+00    # [V] Min potential difference on length dPot/E
+    }
+
+    BarrierTunneling {
+        mt    = 0.1, 1.0
+        g     = 2.1, 0.66
+        alpha = 0, 0
+    }
+
+    Auger {
+        A  = 6.7000e-32, 7.2000e-32 # [cm^6/s]
+        B  = 2.4500e-31, 4.5000e-33 # [cm^6/s]
+        C  = -2.2000e-32, 2.6300e-32# [cm^6/s]
+        H  = 3.46667, 8.25688       # [1]
+        N0 = 1.0000e+18, 1.0000e+18 # [cm^(-3)]
+    }
+
+    Scharfetter {
+        taumin = 0.0000e+00, 0.0000e+00 # [s]
+        taumax = 1.0000e-05, 3.0000e-06 # [s]
+        Nref   = 1.0000e+16, 1.0000e+16 # [cm^(-3)]
+        gamma  = 1, 1                   # [1]
+        Talpha = -1.5000e+00, -1.5000e+00 # [1]
+        Tcoeff = 2.55, 2.55             # [1]
+        Etrap  = 0.0000e+00             # [eV]
+    }
+
+    Epsilon {
+        epsilon = 11.7  # Relative permittivity of Silicon
+    }
+
+    EnergyRelaxationTime {
+        (tau_w)_ele = 0.3   # [ps]
+        (tau_w)_hol = 0.11  # [ps]
+    }
+
+    Bandgap {
+        Bgn2Chi           = 0.5            # [1]
+        dEg0(Bennett)     = 0.0000e+00     # [eV]
+        dEg0(Slotboom)    = 0.0e+00        # [eV]
+        dEg0(OldSlotboom) = 0.0000e+00     # [eV]
+        dEg0(delAlamo)    = 0.0000e+00     # [eV]
+        beta              = 0.00e+00       # [K]
+        Tpar              = 300.0000e+00   # [K]
+        Eg0               = 1.12           # [eV]
+        alpha             = 0.00e+00       # [eV K^-1]
+        Chi0              = 4.05           # [eV] Electron affinity
+    }
+
+    OldSlotboom {
+        Ebgn = 9.0000e-03 # [eV]
+        Nref = 1.0000e+17 # [cm^(-3)]
+    }
+
+    eDOSMass {
+        Formula = 2
+        Nc300   = 3.0000e+19 # [cm^-3]
+    }
+
+    hDOSMass {
+        Formula = 2
+        Nv300   = 2.1000e+19 # [cm^-3]
+    }
+
+    ConstantMobility {
+        mumax    = 1445., 486. # [cm2/(Vs)]
+        Exponent = 1.0, 1.0
+    }
+
+    PhuMob {
+        mumax_As = 1445.0       # [cm2/(Vs)]
+        mumin_As = 0.0          # [cm2/Vs]
+        theta_As = 2.285        # [1]
+        n_ref_As = 9.6800e+16   # [cm^(-3)]
+        alpha_As = 0.68         # [1]
+        mumax_P  = 1445.        # [cm2/(Vs)]
+        mumin_P  = 56.0         # [cm2/Vs]
+        theta_P  = 2.285        # [1]
+        n_ref_P  = 9.6800e+16   # [cm^(-3)]
+        alpha_P  = 0.68         # [1]
+        mumax_B  = 486.         # [cm2/(Vs)]
+        mumin_B  = 46.0         # [cm2/Vs]
+        theta_B  = 2.247        # [1]
+        n_ref_B  = 2.2300e+17   # [cm^(-3)]
+        alpha_B  = 0.719        # [1]
+    }
+
+    HighFieldDependence {
+        Vsat_Formula = 1, 1
+        beta0        = 1.20, 0.93
+        betaexp      = 1.0, 1.0
+        vsat0        = 1.0100e+07, 1.0100e+07 # [cm/s]
+        vsatexp      = 1.0, 1.0
+    }
+
+    ENormalMob {
+        B      = 3.6100e+07, 1.5100e+07 # [cm/s]
+        C      = 1.7000e+04, 4.1800e+03 # [cm^(5/3)/(s V^(2/3))]
+        N0     = 1, 1
+        lambda = 0.0233, 0.0119
+        k      = 1, 1
+        delta  = 3.5800e+18, 4.1000e+15 # [V/s]
+        A      = 2.58, 2.18
+        alpha  = 6.8500e-23, 7.8200e-21
+        N1     = 1, 1
+        nu     = 0.0767, 0.123
+        eta    = 1.0e+300, 1.0e+300
+        l_crit = 1.0000e-06, 1.0000e-06 # [cm]
+    }
+}
+
+Material = "Oxide" {
+    Epsilon {
+        epsilon = 3.9   # SiO2 relative permittivity
+    }
+    BarrierTunneling {
+        mt    = 0.2, 1.0
+        g     = 2.0, 0.5
+        alpha = 0, 0
+    }
+    Bandgap {
+        Chi0  = 0.9     # [eV]
+        Eg0   = 9.0     # [eV]
+        alpha = 0.0
+        beta  = 0.0
+        Tpar  = 0.0
+    }
+}
+
+Material = "HfO2" {
+    Epsilon {
+        epsilon = 31.0  # Doped Si:HfO2 ferroelectric relative permittivity
+    }
+    FEPolarization {
+        # Landau-Devonshire Ferroelectric Polarization parameters
+        Alpha = -3.7e10 # [cm/F] Negative stiffness parameter
+        Beta  = 2.5e21  # [cm^5/(F C^2)] Higher-order Landau parameter
+        Gamma = 0.0
+    }
+    Bandgap {
+        Chi0  = 2.15    # [eV]
+        Eg0   = 5.58    # [eV]
+        alpha = 0.0
+        beta  = 0.0
+        Tpar  = 0.0
+    }
+}
+
+Material = "Vacuum" {
+    Epsilon {
+        epsilon = 1.0   # Baseline air/vacuum reference permittivity
+    }
+    Epsilon_Inf {
+        epsilon_inf = 1.0
+    }
+    Bandgap {
+        Chi0  = 0.0
+        Eg0   = 20.0
+        alpha = 0.0
+        beta  = 0.0
+        Tpar  = 0.0
+    }
+}
