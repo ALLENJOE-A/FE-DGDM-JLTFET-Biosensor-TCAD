@@ -1,52 +1,46 @@
 # Figures Directory
+**Project:** Ferroelectric Double-Gate Doping-Modulated Junctionless Tunnel FET (FE-DGDM-JLTFET) Biosensor TCAD  
+**Repository:** [ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD](https://github.com/ALLENJOE-A/FE-DGDM-JLTFET-Biosensor-TCAD)
 
-Publication-ready figures for papers, presentations, and portfolio.
+---
 
-## Structure
+## 1. Overview
 
-```
+This directory contains publication-ready figures (PNG raster for web rendering and SVG vector format for publications) generated from digitized TCAD simulation data, alongside the original Sentaurus Inspect plots.
+
+## 2. Directory Structure
+
+```text
 figures/
-├── device/           # Device architecture diagrams (empty - needed)
-├── electrical/       # Transfer characteristics
-├── physics/          # 2D physics contours (E-field, potential, bands)
-├── sensing/          # Biosensing response curves
-└── optimization/     # Parameter optimization plots
+├── device/
+│   ├── device_architecture_schematic.png     # Engineering cross-section diagram
+│   └── device_architecture_schematic.svg     # Vector cross-section diagram
+├── electrical/
+│   ├── k_sweep_transfer_characteristics.png  # Dual-panel K-sweep transfer curve (linear & log)
+│   ├── k_sweep_transfer_characteristics.svg  # Vector version
+│   ├── id_vgs_qf_neutral.png                 # Original Sentaurus Inspect plot
+│   └── ioff_vgs_qf_neutral.png               # Original Sentaurus Inspect plot
+├── sensing/
+│   ├── cavity_thickness_transfer_characteristics.png  # Cavity thickness variation (tcav = 30, 35, 40 nm)
+│   ├── cavity_thickness_transfer_characteristics.svg  # Vector version
+│   ├── fixed_charge_sensitivity_comparison.png        # Negative vs Positive QF biomolecule response
+│   ├── fixed_charge_sensitivity_comparison.svg        # Vector version
+│   ├── ion_cavity.png                        # Original Sentaurus Inspect plot
+│   └── ioff_cavity.png                       # Original Sentaurus Inspect plot
+├── comparative/
+│   ├── metrics_benchmark_summary.png         # 4-panel benchmark (Ion, SS, Vth shift, Ion/Ioff)
+│   └── metrics_benchmark_summary.svg         # Vector version
+├── optimization/
+│   ├── ion_k_values.png                      # Original Sentaurus Inspect plot
+│   └── ioff_k_values.png                     # Original Sentaurus Inspect plot
+└── physics/
+    └── electric_field_distribution.png       # Original Sentaurus Inspect plot
 ```
 
-## Current Contents
+## 3. Publication Standards
 
-| Directory | Files | Description |
-|-----------|-------|-------------|
-| `device/` | *(empty)* | Need: cross-section, 3D view, band diagram schematic |
-| `electrical/` | `id_vgs_qf_neutral.png`, `ioff_vgs_qf_neutral.png` | QF Neutral transfer curves |
-| `physics/` | `electric_field_distribution.png` | Peak E-field at tunnel junction |
-| `sensing/` | `ion_cavity.png`, `ioff_cavity.png` | Cavity thickness sensitivity |
-| `optimization/` | `ion_k_values.png`, `ioff_k_values.png` | K-value optimization |
-
-## Figure Guidelines
-
-For future additions, follow these standards:
-
-- **Format**: PNG (for GitHub) + PDF/SVG (for papers)
-- **Resolution**: ≥300 DPI for raster, vector preferred
-- **Fonts**: Arial/Helvetica, 8-10 pt axis labels
-- **Axes**: SI units (μA/μm, V, V/cm, eV)
-- **Legends**: Clear, inside plot area if possible
-- **Color**: Colorblind-safe palette (viridis, cividis, or Okabe-Ito)
-
-## Generating New Figures
-
-```python
-# Example: Extract data from SDevice .plt → Plot with matplotlib
-import matplotlib.pyplot as plt
-# ... load data ...
-plt.savefig('figures/electrical/id_vgs.pdf', dpi=300, bbox_inches='tight')
-```
-
-## Missing Figures (Recommended)
-
-1. **Device architecture** — Cross-section with labels
-2. **Energy band diagram** — Annotated schematic (OFF/ON states)
-3. **Sensing mechanism** — Biomolecule in cavity → ΔVT illustration
-4. **Comparison plot** — Baseline vs FE-DGDM-JLTFET
-5. **Sensitivity vs concentration** — When biomolecule data available
+All generated plots adhere to IEEE Electron Device Society (EDS) / Nature publication guidelines:
+- **Resolution**: 300 DPI raster (`.png`) and scalable vector (`.svg`).
+- **Typography**: Clean sans-serif font hierarchy (10–12 pt).
+- **Color Palettes**: High-contrast, distinguishable curve colors with SI-standard units ($\mu\text{A}/\mu\text{m}$, $\text{V}$, $\text{mV/dec}$, $\text{cm}^{-2}$).
+- **Plotting Script**: Regenerable via `python analysis/scripts/plot_publication_figures.py`.
