@@ -99,7 +99,7 @@ with $E_{bgn} = 9.0\text{ meV}$ and $N_{ref} = 1.0 \times 10^{17}\text{ cm}^{-3}
 
 ## 3. Numerical Convergence and Solver Strategy
 
-The solver configuration in [`sdevice_des.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/device/sdevice_des.tcl) utilizes:
+The solver configuration in [`sdevice_des.tcl`](../sdevice/device/sdevice_des.tcl) utilizes:
 1. **Newton Convergence Settings**:
    - `Digits = 8`
    - `RelErrControl`

@@ -4,7 +4,7 @@ This directory contains material, transport, and ferroelectric parameter files u
 
 ## Files
 
-- [`sdevice.par`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/parameter/sdevice.par): Verified Sentaurus parameter file providing calibrated material properties for Silicon, $\text{SiO}_2$ (oxide), $\text{HfO}_2$ (ferroelectric), and Vacuum (nanocavity).
+- [`sdevice.par`](sdevice.par): Verified Sentaurus parameter file providing calibrated material properties for Silicon, $\text{SiO}_2$ (oxide), $\text{HfO}_2$ (ferroelectric), and Vacuum (nanocavity).
 
 ## Key Parameters Defined
 

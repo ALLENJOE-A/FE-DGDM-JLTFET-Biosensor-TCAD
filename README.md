@@ -26,7 +26,7 @@ The optimized 30 nm cavity achieves an outstanding drive current of **$0.8040\te
 
 ## Device Architecture & Grounded TCAD Geometry
 
-The device architecture is directly verified from the Sentaurus Structure Editor input deck ([`sde/structure/sde_dvs.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sde/structure/sde_dvs.tcl)) with an exact physical transport length of **158 nm** ($X \in [0.000, 0.158]\ \mu\text{m}$):
+The device architecture is directly verified from the Sentaurus Structure Editor input deck ([`sde/structure/sde_dvs.tcl`](sde/structure/sde_dvs.tcl)) with an exact physical transport length of **158 nm** ($X \in [0.000, 0.158]\ \mu\text{m}$):
 
 ![FE-DGDM-JLTFET Device Schematic](figures/device/device_architecture_schematic.png)
 
@@ -56,11 +56,11 @@ The device architecture is directly verified from the Sentaurus Structure Editor
 ## Sentaurus TCAD Decks (100% Tcl Codebase)
 
 All input decks and workbench automation are supplied in standard Tcl format for complete reproducibility:
-- [`sde/structure/sde_dvs.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sde/structure/sde_dvs.tcl) — SDE geometry, region definitions, contacts, and mesh commands.
-- [`sdevice/device/sdevice_des.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/device/sdevice_des.tcl) — SDevice physics cards, solvers, and quasistationary ramp sequences.
-- [`sdevice/physics/physics_models.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/physics/physics_models.tcl) — Transport, Hurkx non-local BTBT, and ferroelectric models.
-- [`parameter/sdevice.par`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/parameter/sdevice.par) — Calibrated material parameters for Silicon, $\text{SiO}_2$, $\text{HfO}_2$, and Vacuum.
-- [`simulations/fe_dgdm_jltfet_simulation.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/simulations/fe_dgdm_jltfet_simulation.tcl) — SWB parametric sweep automation deck.
+- [`sde/structure/sde_dvs.tcl`](sde/structure/sde_dvs.tcl) — SDE geometry, region definitions, contacts, and mesh commands.
+- [`sdevice/device/sdevice_des.tcl`](sdevice/device/sdevice_des.tcl) — SDevice physics cards, solvers, and quasistationary ramp sequences.
+- [`sdevice/physics/physics_models.tcl`](sdevice/physics/physics_models.tcl) — Transport, Hurkx non-local BTBT, and ferroelectric models.
+- [`parameter/sdevice.par`](parameter/sdevice.par) — Calibrated material parameters for Silicon, $\text{SiO}_2$, $\text{HfO}_2$, and Vacuum.
+- [`simulations/fe_dgdm_jltfet_simulation.tcl`](simulations/fe_dgdm_jltfet_simulation.tcl) — SWB parametric sweep automation deck.
 
 ---
 

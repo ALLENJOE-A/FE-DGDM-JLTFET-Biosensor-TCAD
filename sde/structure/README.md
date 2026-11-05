@@ -4,7 +4,7 @@ This directory contains the verified Sentaurus Structure Editor (SDE) script for
 
 ## Files
 
-- [`sde_dvs.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sde/structure/sde_dvs.tcl): The complete Sentaurus Structure Editor deck generating the 2D cross-section, doping definitions, contact placements, refinement windows, and meshing commands (`snmesh -a`).
+- [`sde_dvs.tcl`](sde_dvs.tcl): The complete Sentaurus Structure Editor deck generating the 2D cross-section, doping definitions, contact placements, refinement windows, and meshing commands (`snmesh -a`).
 
 ## Device Architecture Implementation
 

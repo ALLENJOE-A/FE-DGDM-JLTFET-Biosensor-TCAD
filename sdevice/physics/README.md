@@ -4,7 +4,7 @@ This directory documents the calibrated physics models used in the Sentaurus Dev
 
 ## Files
 
-- [`physics_models.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/physics/physics_models.tcl): The exact physics model definitions including Hydrodynamic transport, Hurkx dynamic non-local BTBT, Landau-Devonshire ferroelectric polarization, PhuMob, and Lombardi models.
+- [`physics_models.tcl`](physics_models.tcl): The exact physics model definitions including Hydrodynamic transport, Hurkx dynamic non-local BTBT, Landau-Devonshire ferroelectric polarization, PhuMob, and Lombardi models.
 
 ## Physics Model Summary
 

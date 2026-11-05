@@ -4,7 +4,7 @@ This directory contains the verified Sentaurus Device (SDevice) simulation decks
 
 ## Files
 
-- [`sdevice_des.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/device/sdevice_des.tcl): The primary Sentaurus Device command deck specifying electrodes, transport models, tunneling, recombination, math solvers, and quasistationary ramp sequences.
+- [`sdevice_des.tcl`](sdevice_des.tcl): The primary Sentaurus Device command deck specifying electrodes, transport models, tunneling, recombination, math solvers, and quasistationary ramp sequences.
 
 ## Physics and Models Implemented
 

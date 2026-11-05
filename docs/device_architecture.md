@@ -8,9 +8,9 @@
 
 ## 1. Verified Device Architecture (Grounded in SDE Deck)
 
-The **FE-DGDM-JLTFET** biosensor structure is defined in [`sde_dvs.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sde/structure/sde_dvs.tcl) with a total physical transport length of **158 nm** ($X \in [0.000, 0.158]\ \mu\text{m}$).
+The **FE-DGDM-JLTFET** biosensor structure is defined in [`sde_dvs.tcl`](../sde/structure/sde_dvs.tcl) with a total physical transport length of **158 nm** ($X \in [0.000, 0.158]\ \mu\text{m}$).
 
-![FE-DGDM-JLTFET Architecture](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/figures/device/device_architecture_schematic.png)
+![FE-DGDM-JLTFET Architecture](../figures/device/device_architecture_schematic.png)
 
 ### Geometric Breakdown and Coordinates (TCAD SDE Specification)
 
@@ -63,7 +63,7 @@ The **FE-DGDM-JLTFET** biosensor structure is defined in [`sde_dvs.tcl`](file://
 
 ## 3. Physical Models & Solvers (SDevice Implementation)
 
-The TCAD simulations employ rigorous quantum-corrected and non-local transport physics configured in [`sdevice_des.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/device/sdevice_des.tcl) and [`sdevice.par`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/parameter/sdevice.par):
+The TCAD simulations employ rigorous quantum-corrected and non-local transport physics configured in [`sdevice_des.tcl`](../sdevice/device/sdevice_des.tcl) and [`sdevice.par`](../parameter/sdevice.par):
 
 1. **Non-Local Hurkx Band-to-Band Tunneling (BTBT)**:
    - Evaluated dynamically across the source-channel interface:

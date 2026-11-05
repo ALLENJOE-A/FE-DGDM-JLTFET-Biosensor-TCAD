@@ -16,11 +16,11 @@
   - `sdevice` (Sentaurus Device with non-local band-to-band tunneling and ferroelectric polarization models)
   - `inspect` or `svisual` (Output curve extraction)
 - Input decks included in this repository:
-  - [`sde/structure/sde_dvs.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sde/structure/sde_dvs.tcl)
-  - [`sdevice/device/sdevice_des.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/device/sdevice_des.tcl)
-  - [`parameter/sdevice.par`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/parameter/sdevice.par)
-  - [`sdevice/physics/physics_models.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/sdevice/physics/physics_models.tcl)
-  - [`simulations/fe_dgdm_jltfet_simulation.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/simulations/fe_dgdm_jltfet_simulation.tcl)
+  - [`sde/structure/sde_dvs.tcl`](../sde/structure/sde_dvs.tcl)
+  - [`sdevice/device/sdevice_des.tcl`](../sdevice/device/sdevice_des.tcl)
+  - [`parameter/sdevice.par`](../parameter/sdevice.par)
+  - [`sdevice/physics/physics_models.tcl`](../sdevice/physics/physics_models.tcl)
+  - [`simulations/fe_dgdm_jltfet_simulation.tcl`](../simulations/fe_dgdm_jltfet_simulation.tcl)
 
 ### Open-Source Data Analysis Environment (Without TCAD License)
 - **Python**: Version 3.8 or newer.

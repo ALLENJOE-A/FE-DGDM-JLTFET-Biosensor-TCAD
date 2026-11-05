@@ -60,7 +60,7 @@ $$\text{Sensitivity}(I_{DS}) = \frac{|I_{DS}(bio) - I_{DS}(air)|}{I_{DS}(air)}$$
 | **12** | Amino Acids | 0.2257 | $1.0637 \times 10^{-1}$ | **10.637 %** |
 | **22** | MDA-MB-231 (Cancer Cell) | 0.2410 | $1.8137 \times 10^{-1}$ | **18.137 %** |
 
-![Benchmark Summary](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/figures/comparative/metrics_benchmark_summary.png)
+![Benchmark Summary](../figures/comparative/metrics_benchmark_summary.png)
 
 ---
 

@@ -4,7 +4,7 @@ This directory contains Sentaurus Workbench (SWB) automation and batch simulatio
 
 ## Files
 
-- [`fe_dgdm_jltfet_simulation.tcl`](file:///D:/3RD%20YEAR%20MATERIALS/AGY/FE-DGDM-JLTFET-Biosensor-TCAD/simulations/fe_dgdm_jltfet_simulation.tcl): Sentaurus Workbench Tcl script to automate parameter sweeps across cavity lengths, biomolecule dielectric constants ($K$), and fixed charges ($Q_F$).
+- [`fe_dgdm_jltfet_simulation.tcl`](fe_dgdm_jltfet_simulation.tcl): Sentaurus Workbench Tcl script to automate parameter sweeps across cavity lengths, biomolecule dielectric constants ($K$), and fixed charges ($Q_F$).
 
 ## Automated Sweeps
 
